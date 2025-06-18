@@ -1,0 +1,131 @@
+.matrix-container {
+  position: fixed;
+  top: 45px;
+  left: 115px;
+ /*  transform: translate(-50%, -50%); */
+  background-color: rgb(0, 0, 0);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 1);
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+  pointer-events: auto;
+}
+
+.matrix-collapsed {
+  position: fixed;
+  top: 285px;
+  left: 115px;
+  width: 50px;
+  height: 50px;
+  background-color: #00cc00;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0, 204, 0, 0.7);
+  z-index: 1000;
+  animation: pulse 1.5s infinite alternate;
+  transition: all 0.3s ease;
+}
+
+.matrix-collapsed:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 204, 0, 0.9);
+}
+
+.matrix-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  color: white;
+  font-weight: bold;
+}
+
+.matrix-collapse-btn {
+  padding: 0;
+  background: none;
+  border: none;
+  color: white;
+  /* font-size: 15px; */
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex
+;margin: 0 0 0 20px;
+  align-items: center;
+  justify-content: center;
+  /* border-radius: 50%; */
+  background-color: rgb(166, 44, 44);
+}
+
+.matrix-collapse-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.matrix-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.matrix-row {
+  display: flex;
+  gap: 10px;
+}
+
+.matrix-cell {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3333334b;
+  color: white;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.matrix-cell:hover {
+  background-color: #555;
+  transform: scale(1.05);
+}
+
+.matrix-cell.selected {
+  background-color: #e88d1a;
+  box-shadow: 0 0 15px #e88d1a;
+  transform: scale(1.1);
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    top: 20px;
+    left: 115px;
+  }
+  to {
+    opacity: 1;
+    top: 40px;
+    left: 115px;
+  }
+}
+
+@keyframes pulse {
+  from {
+    box-shadow: 0 0 15px rgba(0, 204, 0, 0.7);
+  }
+  to {
+    box-shadow: 0 0 25px rgba(0, 204, 0, 1);
+  }
+}

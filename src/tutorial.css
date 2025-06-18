@@ -1,0 +1,131 @@
+/* Tutorial Styles - No Overlay Approach */
+.tutorial-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Step 1: Highlight elements and reduce opacity of connections */
+body[data-tutorial-step="1"] .element,
+.tutorial-step-1 .element {
+  /* position: relative !important; */
+  z-index: 1001 !important;
+  border:2px dashed var(--second-chord-color) !important;
+  filter: brightness(1.2) !important;
+  pointer-events: auto !important;
+  background: black !important;
+}
+body[data-tutorial-step="1"] .squared {
+ /*  position: relative !important; */
+  z-index: 1 !important;
+  border:2px dashed var(--second-chord-color) !important;
+  filter: brightness(1.2) !important;
+  pointer-events: auto !important;
+}
+
+body[data-tutorial-step="1"] .allConnections,
+.tutorial-step-1 .allConnections {
+  opacity: 0.3 !important;
+  transition: opacity 0.3s ease;
+}
+
+/* Step 2: Highlight connections and reduce opacity of elements */
+body[data-tutorial-step="2"] .connection,
+.tutorial-step-2 .connection {
+  z-index: 1001 !important;
+  pointer-events: auto !important;
+  filter: drop-shadow(0 0 10px var(--second-chord-color)) brightness(1.8) !important;
+  -webkit-filter: drop-shadow(0 0 10px var(--second-chord-color)) brightness(1.8) !important;
+  outline: none !important;
+}
+
+/* Target SVG connections specifically with var(--second-chord-color) color */
+body[data-tutorial-step="2"] .allConnections img,
+.tutorial-step-2 .allConnections img {
+  filter: brightness(0) saturate(100%) invert(77%) sepia(62%) saturate(757%) hue-rotate(156deg) brightness(103%) contrast(98%) !important;
+  -webkit-filter: brightness(0) saturate(100%) invert(77%) sepia(62%) saturate(757%) hue-rotate(156deg) brightness(103%) contrast(98%) !important;
+  opacity: 1 !important;
+}
+
+/* Target div connections specifically */
+body[data-tutorial-step="2"] .allConnections div.connection,
+.tutorial-step-2 .allConnections div.connection {
+  background-color: var(--second-chord-color) !important;
+  opacity: 1 !important;
+}
+
+body[data-tutorial-step="2"] .element,
+.tutorial-step-2 .element {
+  opacity: 1!important;
+  transition: opacity 0.3s ease;
+}
+
+/* Target squared class with just blue borders */
+body[data-tutorial-step="2"] .squared,
+.tutorial-step-2 .squared {
+  border: 2px dashed var(--second-chord-color) !important;
+  background-color: transparent !important;
+  opacity: 1 !important;
+}
+
+/* Make sure all connections are visible in step 2 */
+body[data-tutorial-step="2"] .allConnections,
+.tutorial-step-2 .allConnections {
+  opacity: 1 !important;
+}
+
+.tutorial-modal {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #222;
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 300px;
+  text-align: center;
+  z-index: 10000;
+  pointer-events: auto;
+}
+
+.tutorial-modal h3 {
+  color: #ffffff;
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.tutorial-modal p {
+  margin: 15px 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.tutorial-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.tutorial-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tutorial-buttons button:first-child {
+  background-color: transparent;
+  color: #aaa;
+}
+
+.tutorial-buttons button:last-child {
+  background-color: #ffffff;
+  color: #000;
+  font-weight: bold;
+}

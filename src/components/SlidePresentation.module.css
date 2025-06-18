@@ -1,0 +1,353 @@
+.slidePresentation {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: rgba(0, 0, 0, 0.95);
+    color: white;
+}
+
+.slideControls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    gap: 20px;
+    position: relative;
+}
+
+.slideControlButton, .slideCloseButton {
+    background: rgba(255, 255, 255, 0);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* CSS Arrow styles */
+.arrowLeft, .arrowRight, .closeX {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Left arrow */
+.arrowLeft::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: translate(-40%, -50%) rotate(45deg);
+}
+
+/* Right arrow */
+.arrowRight::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border-right: 2px solid white;
+    border-top: 2px solid white;
+    transform: translate(-60%, -50%) rotate(45deg);
+}
+
+/* Close X */
+.closeX::before, .closeX::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 2px;
+    background-color: white;
+}
+
+.closeX::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.closeX::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.slideControlButton:hover, .slideCloseButton:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.slideControlButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.slideCloseButton {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
+.slideIndicator {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.slideContent {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.slide {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.slideTitle {
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.slideGridContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+.slideGridRow {
+    display: flex;
+    gap: 0px;
+}
+
+.slideGridCell {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+/* Special styling for the middle squares with animation */
+.middleSquare {
+    border-bottom: 2px solid white;
+    animation: growFromMiddle 0.8s ease-out forwards;
+    transform-origin: center;
+    position: relative;
+    overflow: visible;
+}
+
+/* SVG container for centering the SVG content */
+.svgContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    min-height: 500px;
+}
+
+/* SVG content styling */
+.svgContent {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px; /* Reduced fixed height */
+    max-width: 100%;
+    max-height: 100%;
+    z-index: 50;
+    pointer-events: none;
+}
+
+/* SVG object styling */
+.svgObject {
+    width: 500px;
+    height: 500px;
+    visibility: hidden; /* Hide initially */
+    display: block;
+    margin: 0 auto;
+    position: absolute; /* Position absolutely */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center perfectly */
+}
+
+/* Instruction box styling */
+
+.instructionBox {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    border: 2px solid white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100; /* Higher z-index to ensure it's above SVG */
+    text-align: center;
+    pointer-events: none; /* Prevent interaction with the box */
+}
+
+.instructionText {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.instructionExample {
+    color: white;
+    font-size: 14px;
+    font-style: italic;
+}
+
+/* Animated line styles */
+.animatedLine {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLine 1.5s ease-in-out forwards;
+}
+
+/* Spinning circle animation */
+.spinningCircle {
+    animation: spin 10s linear infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+}
+
+/* Glowing circle animation */
+.glowingCircle {
+    animation: glow 2s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
+}
+
+/* Combined spinning and glowing */
+.spinGlowCircle {
+    animation: spin 10s linear infinite, glow 2s ease-in-out infinite alternate;
+    transform-origin: center;
+    transform-box: fill-box;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
+}
+
+@keyframes drawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes glow {
+    from {
+        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
+    }
+    to {
+        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+    }
+}
+
+/* For lines that should fade in instead of draw */
+.fadeInLine {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Animation keyframes */
+@keyframes growFromMiddle {
+    0% {
+        transform: scale(0.2);
+        opacity: 0;
+        border-bottom-color: rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+        border-bottom-color: white;
+    }
+}
+
+/* Horizontal-only animation keyframes */
+@keyframes growHorizontally {
+    0% {
+        transform: scaleX(0.2);
+        opacity: 0;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: scaleX(1);
+        opacity: 1;
+        background-color: white;
+    }
+}
+
+/* Vertical animation keyframes */
+@keyframes growVertical {
+    0% {
+        opacity: 0;
+        height: 0;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+        height: 100%;
+    }
+}
+
+/* Fade in animation for diagonal lines */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

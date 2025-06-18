@@ -1,0 +1,1927 @@
+
+/* Prevent text selection across the entire app */
+* {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.app {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: rgb(0 0 0);
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+}
+
+/* Add styles for the connections container to prevent layout shifts */
+.allConnections {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Allow clicks to pass through */
+    z-index: 0; /* Ensure it stays behind interactive elements */
+}
+.buttons{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: absolute;
+    top: 40px;
+    left: 35px;
+    z-index: 100;
+}
+
+.button-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.button {
+    border-radius: 50%;
+    color: white;
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.button-icon {
+    font-size: 18px;
+    color: white;
+}
+
+.button-text {
+    position: absolute;
+    left: 46px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 6px 12px;
+    color: white;
+    font-size: 12px;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.button-container:hover .button-text {
+    opacity: 1;
+}
+.button span{
+    margin-left: 10px;
+}
+
+/* Root Selector Styles */
+.root-selector-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    margin: 10px 0 10px -37px;
+    position: relative;
+    justify-content: center;
+}
+
+.root-selector-label {
+    position: absolute;
+    left: 80px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    padding: 6px 12px;
+    color: white;
+    font-size: 12px;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.root-selector-container:hover .root-selector-label {
+    opacity: 0; /* Changed from 1 to 0 to hide the tooltip on hover */
+}
+
+.root-selector {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 1);
+    border-radius: 5%; /* Make it a circle */
+    color: white;
+    font-size: 14px;
+    font-family: 'Courier New', Courier, monospace;
+    position: relative;
+    user-select: none; /* Prevent text selection during drag */
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.6s ease; /* Slower transition - 1 second */
+    cursor: pointer; /* Change to pointer to indicate clickable */
+}
+
+.root-selector:hover {
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.root-selector.dragging {
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+}
+
+.root-selector.changing {
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+    pointer-events: none; /* Disable mouse events during transition */
+}
+
+/* Style for when matrix is active/expanded */
+.root-selector.matrix-active {
+    background: var(--first-chord-color);
+    border: 2px solid white;
+    box-shadow: 0 0 15px rgba(240, 140, 0, 0.7);
+    animation: pulse 1.5s infinite alternate;
+}
+
+.root-selector.matrix-active:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(240, 140, 0, 0.9);
+}
+
+@keyframes pulse {
+    from {
+        box-shadow: 0 0 15px rgba(240, 140, 0, 0.7);
+    }
+    to {
+        box-shadow: 0 0 25px rgba(240, 140, 0, 1);
+    }
+}
+
+.root-selector-value {
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.6s ease; /* Slower transition for value changes - 1 second */
+    margin: 0;
+    text-align: center;
+    width: 100%;
+}
+
+/* Styling for the arrow buttons */
+.root-selector-arrow {
+  cursor: pointer;
+  color: white;
+  font-size: 10px;
+  padding: 5px;
+  margin: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 30%;
+  width: 15px;
+  height: 15px;
+  transition: all 0.3s ease;
+  border: 2px solid rgb(255, 255, 255);
+}
+
+.root-selector-arrow:hover {
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+}
+
+.root-selector-arrow:active {
+    transform: scale(0.9);
+}
+
+/* Hint removed */
+.button .on{
+    color: green;
+}
+.button .off{
+    color: red;
+}
+.allConnections{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+    background: rgba(255, 255, 255, 0);
+    
+}
+
+.oneToThree1{
+  position: absolute;
+  top:55px;
+  left: 50%;
+  height:60px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.6);
+ transform: rotate(0deg);
+ transform-origin: bottom;
+}
+.oneToThree2{
+    position: absolute;
+    top:9%;
+    left: 49.3%;
+    transform: rotate(0deg);
+    height: 60px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+}
+.oneToThree3{
+    position: absolute;
+    top:9%;
+    left: 50.6%;
+    transform: rotate(0deg);
+    height: 60px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+}
+.oneToThree4{
+    position: absolute;
+    top:9%;
+    left: 51.9%;
+    transform: rotate(0deg);
+    height: 60px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+}
+.threeToFive1{
+    position: absolute;
+    top:26%;
+    left: 49.3%;
+    transform: rotate(0deg);
+    height: 60px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+}
+.threeToFive2{
+    position: absolute;
+    top:26%;
+    left: 50.6%;
+    transform: rotate(0deg);
+    height: 60px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+   
+}
+/* .sixToEight1{
+    position: absolute;
+    top:54%;
+    left: 50%;
+    transform: rotate(0deg);
+    height: 50px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+} */
+.eightToTen1{
+    position: absolute;
+    top:68%;
+    left: 49.3%;
+    transform: rotate(0deg);
+    height: 50px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+}
+.eightToTen2{
+    position: absolute;
+    top:68%;
+    left: 50.6%;
+    transform: rotate(0deg);
+    height: 50px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+}
+.eightToSixteen{
+    position: absolute;
+    top:50%;
+    left: 49.3%;
+    transform: rotate(-45deg);
+    height: 80px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   
+   transform-origin: bottom;
+}
+.eightToEighteen{
+  position: absolute;
+  top:50%;
+  left: 51.6%;
+  transform: rotate(45deg);
+  height: 80px;
+  width: 1px;
+  background: rgb(255, 255, 255);
+ 
+ transform-origin: bottom;
+}
+.tenToTwelve1{
+    position: absolute;
+    top:83%;
+    left: 50%;
+    height:50px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.6);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+}
+/* .tenToTwelve2{
+    position: absolute;
+    top:83%;    
+    left: 49.3%;
+    transform: rotate(0deg);
+    height: 50px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+}
+.tenToTwelve3{
+    position: absolute;
+    top:83%;
+    left: 50.6%;
+    transform: rotate(0deg);
+    height: 50px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+}
+.tenToTwelve4{
+    position: absolute;
+    top:83%; 
+    left: 51.9%;
+    transform: rotate(0deg);
+    height: 50px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(0deg);
+   transform-origin: bottom;
+} */
+.thirteenToFifteen1{
+    position: absolute;
+    top:32%;
+    left: 5%;
+    transform: rotate(0deg);
+    height: 110px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(90deg);
+   transform-origin: bottom;
+}
+/* .thirteenToFifteen2{
+    position: absolute;
+    top:32%;
+    left: 5%;
+    transform: rotate(0deg);
+    height: 110px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(90deg);
+   transform-origin: bottom;
+}
+.thirteenToFifteen3{
+    position: absolute;
+    top:33%;
+    left: 5%;
+    transform: rotate(0deg);
+    height: 110px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(90deg);
+   transform-origin: bottom;
+}
+.thirteenToFifteen4{
+    position: absolute;
+    top:34%;
+    left: 5%;
+    transform: rotate(0deg);
+    height: 110px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(90deg);
+   transform-origin: bottom;
+}   */ 
+.fifteenToSixteen{
+    position: absolute;
+    top:32.5%;
+    left: 20%;   
+    transform: rotate(0deg);
+    height: 110px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(90deg);
+   transform-origin: bottom;
+}
+.fifthteenToThree1{
+    position: absolute;
+    top:11.9%;
+    left: 23.5%;
+    transform: rotate(0deg);
+    height: 220px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(45deg);
+   transform-origin: bottom;
+}
+
+.fifthteenToThree2{
+    position: absolute;
+  top: 12%;
+  left: 25.5%;
+  transform: rotate(0deg);
+  height: 220px;
+  width: 1px;
+  background: rgb(255, 255, 255);
+ transform: rotate(45deg);
+ transform-origin: bottom
+}
+.fifteenToFive1{
+    position: absolute;
+    top: 25.5%;
+    left: 25%;
+    transform: rotate(0deg);
+    height: 150px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(61deg);
+   transform-origin: bottom;
+}
+/* .fifteenToFive2{
+    position: absolute;
+    top: 26.5%;
+    left: 25%;
+    transform: rotate(0deg);
+    height: 150px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(61deg);
+    transform-origin: bottom;
+} */
+
+.sixteenToSeventeen{
+    position: absolute;
+    top: 39.1%;
+    left: 35%;
+    transform: rotate(0deg);
+    height: 70px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(90deg);
+    transform-origin: bottom;
+}
+.seventeenToEighteen{
+    position: absolute;
+    top: 39.1%;
+    left: 49%;
+    transform: rotate(0deg);
+    height: 70px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(90deg);
+    transform-origin: bottom;
+}
+.seventeenToEight{
+    position: absolute;
+    top: 52.1%;
+    left: 50%;
+    transform: rotate(0deg);
+    height: 70px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(0deg);
+    transform-origin: bottom;
+}
+.eighteenToNineteen{
+    position: absolute;
+    top: 39.1%;
+    left: 64%;
+    transform: rotate(0deg);
+    height: 70px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(90deg);
+    transform-origin: bottom;
+}
+.nineteenToTwentyone1{
+    position: absolute;
+    top:32%;
+    left:76%;
+    transform: rotate(0deg);
+    height: 110px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(90deg);
+   transform-origin: bottom;
+}
+/* .nineteenToTwentyone2{
+    position: absolute;
+    top:32%;
+    left:76%;
+    transform: rotate(0deg);
+    height: 110px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(90deg);
+   transform-origin: bottom;
+}
+.nineteenToTwentyone3{
+    position: absolute;
+    top:33%;
+    left:76%;
+    transform: rotate(0deg);
+    height: 110px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(90deg);
+   transform-origin: bottom;
+}
+.nineteenToTwentyone4{
+    position: absolute;
+    top:34%;
+    left:76%;
+    transform: rotate(0deg);
+    height: 110px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(90deg);
+   transform-origin: bottom;
+} */ 
+.nineteenToFive1{
+    position: absolute;
+    top: 25%;
+    left: 74%;
+    transform: rotate(0deg);
+    height: 150px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(-61deg);
+    transform-origin: bottom;
+   
+}
+/* .nineteenToFive2{
+    position: absolute;
+    top: 26.3%;
+    left: 74.3%;
+    transform: rotate(0deg);
+    height: 150px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(-61deg);
+    transform-origin: bottom;
+} */
+.nineteenToThree1{
+    position: absolute;
+    top:11.4%;
+    left: 76.3%;
+    transform: rotate(0deg);
+    height: 220px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(-45deg);
+   transform-origin: bottom;
+}
+.nineteenToThree2{
+    position: absolute;
+    top: 15%;
+    left: 77.5%;
+    transform: rotate(0deg);
+    height: 220px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(-45deg);
+   transform-origin: bottom
+}
+.sixteenToFive1{
+    position: absolute;
+    top: 33%;
+    left: 37%;
+    transform: rotate(0deg);
+    height: 90px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(60deg);
+   transform-origin: bottom;
+}
+.eighteenToFive1{
+    position: absolute;
+    top: 33%;
+    left: 62%;
+    transform: rotate(0deg);
+    height: 90px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(-60deg);
+   transform-origin: bottom;
+}
+
+.sixTofour1{
+  position: absolute;
+  top: 33%;
+  left: 61%;
+  transform: rotate(0deg);
+  height: 80px;
+  width: 1px;
+  background: rgb(255, 255, 255);
+ transform: rotate(-45deg);
+ transform-origin: bottom;
+}
+.sixTofour2{
+position: absolute;
+top: 36.5%;
+left: 58.5%;
+transform: rotate(0deg);
+height: 60px;
+width: 1px;
+background: rgb(255, 255, 255);
+transform: rotate(-45deg);
+transform-origin: bottom;
+}
+
+
+.fifteenToTen1{
+    position: absolute;
+    top: 53.5%;
+    left: 25%;
+    transform: rotate(0deg);
+    height: 210px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(-45deg);
+   transform-origin: top;
+}
+
+.fifteenToTen2{
+  position: absolute;
+  top: 54%;
+  left: 23.2%;
+  transform: rotate(0deg);
+  height: 210px;
+  width: 1px;
+  background: rgb(255, 255, 255);
+ transform: rotate(-45deg);
+ transform-origin: top;
+}
+.fifteenToEight1{
+    position: absolute;
+    top: 52%;
+    left: 26%;
+    transform: rotate(0deg);
+    height: 150px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(303deg);
+   transform-origin: top;
+}
+/* .fifteenToEight2{
+    position: absolute;
+    top: 52%;
+    left: 25%;
+    transform: rotate(0deg);
+    height: 150px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+   transform: rotate(303deg);
+   transform-origin: top;
+} */
+.fifteenTo.allConnections{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Ensure the container maintains consistent dimensions */
+    pointer-events: none; /* Allow clicks to pass through to elements below */
+}
+.fifteenToNineteen1 {
+    position: absolute;
+    top: -75%;
+    left: 19.6%  ;
+    width: 60%;
+    height: 180%;
+    pointer-events: none;
+}
+.fifteenToNineteen2 {
+    position: absolute;
+    top: -74%;
+    left: 21.5%  ;
+    width: 56%;
+    height: 180%;
+    pointer-events: none;
+}
+.fifteenToNineteen3 {
+    position: absolute;
+    top: -78%;
+    left: 21.5%  ;
+    width: 56%;
+    height: 195%;
+    pointer-events: none;
+}
+/* .fifteenToNineteen2{
+    position: absolute;
+    top: 54%;
+    left: 25%;
+    transform: rotate(0deg);
+    height: 220px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(45deg);
+    transform-origin: top;
+} */
+ .sixteenToEighteen{
+    position: absolute;
+    width: 30%;
+    top: 45%;
+    left: 35%;
+   
+}
+.eightToThree{
+    position: absolute;
+    top: 22%;
+    left: 30%;
+    width:45%;
+    height:45%;
+    
+}
+
+.sixteenToThree{
+    position: absolute;
+    top: 22%;
+    left: 35%;
+    width:20%;
+    transform: rotate(-7deg);
+    
+    
+}
+.eighteenToThree{
+    position: absolute;
+    top: 22%;
+    left: 45%;
+    width:20%;
+    transform: rotate(7deg);
+    
+    
+}
+.nineteenToTen1{
+    position: absolute;
+    top: 54%;
+    left: 74%;
+    transform: rotate(0deg);
+    height: 220px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(45deg);
+    transform-origin: top;
+}
+.nineteenToTen2{
+    position: absolute;
+    top: 54.3%;
+    left: 76%;
+    transform: rotate(0deg);
+    height: 220px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(45deg);
+    transform-origin: top;
+}
+
+.nineteenToEight1{
+    position: absolute;
+    top: 52%;
+    left: 73%;
+    transform: rotate(0deg);
+    height: 150px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(57deg);
+    transform-origin: top;
+}
+/* .nineteenToEight2{
+    position: absolute;
+    top: 52.5%;
+    left: 73.2%;
+    transform: rotate(0deg);
+    height: 150px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(57deg);
+    transform-origin: top;
+} */
+
+.fourToSix1{
+  position: absolute;
+  top: 53%;
+  left: 39%;
+  
+  height: 100px;
+  width: 1px;
+  background: rgb(255, 255, 255);
+ transform: rotate(-41deg);
+ transform-origin: top;
+}
+.sixToSix1{
+    position: absolute;
+    top: 53%;
+    left: 61%;
+    height: 100px;
+    width: 1px;
+    background: rgb(255, 255, 255);
+    transform: rotate(41deg);
+    transform-origin: top;
+  }
+
+/* DIAGRAM */
+
+
+.diagram{
+    display: flex;
+    position: relative;
+}
+.vertical{
+  display: grid;
+  grid-template-rows:50px 50px 50px 50px 50px 50px 43px 43px 43px 43px 43px 43px 43px;
+  height: 600px;
+ /*  gap: 10px; */
+  background: rgba(255, 0, 0, 0);
+  width: 50px;
+  justify-items: center;
+  align-items: center;
+  border: 2px dashed rgba(0, 0, 255, 0); /* Container border for grid visibility */
+  z-index: 5;
+}
+.horizontal > * {
+  outline: 1px solid rgba(0, 0, 255, 0);
+}
+
+.seventeen {
+  position: relative;
+  z-index: 100 !important;
+  pointer-events: all;
+}
+.one{
+    margin-top: -40px;
+}
+.two{
+    margin-top: -40px;
+    visibility: hidden;
+}
+.three{
+    margin-top: -40px;
+}
+.four{
+    margin-top: -40px;
+    visibility: hidden;
+}
+.five{
+    margin-top: -40px;
+}
+.six{
+   /* This class is used for positioning in the chord diagram */
+   position: relative;
+}
+.seven{
+    visibility: hidden;
+}
+.nine{
+    visibility: hidden;
+}
+.eleven{
+    visibility: hidden;
+}
+.fourteen{
+    visibility: hidden;
+}
+.fifteen{
+    margin: 0px 10px 0 -40px;
+}
+.sixteen{
+    margin: 0px 0px 0 -5px;
+}
+.seventeen{
+    cursor: pointer;
+    z-index: 100;
+  /*   position: relative; */
+    width: 60px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 50%;
+    margin-top: 5px;
+    margin-left: 0px;
+}
+.nineteen{
+    margin: 0px -40px 0 0px;
+}
+/* .seventeen{
+    visibility: hidden;
+} */
+.twenty{
+    visibility: hidden;
+} 
+
+.nineteenToTwentyOne1{
+    position: absolute;
+    top: 50.2%;
+    left: 81%;
+    transform: rotate(0deg);
+    transform-style: preserve-3d;
+    height: 1px;
+    width: 110px;
+    background: rgb(255, 255, 255);
+}
+.horizontal{
+  position: absolute;
+  top: 255px;
+  z-index: 10;
+  left: -275px;
+  background: rgba(255, 0, 0, 0);
+  width: 600px;
+  display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.element{
+    width: 40px;
+    height: 40px;
+    background: rgb(7, 7, 7);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    font-size: 20px;
+    position: relative;
+    box-shadow: 0 0 10px rgb(60, 60, 60);
+    /* Add will-change to optimize transitions and prevent layout shifts */
+    will-change: box-shadow;
+    /* Ensure consistent positioning during transitions */
+    transform: translateZ(0);
+} 
+.element:hover:not(.selected-chord):not(.first-selected-chord):not(.connected-chord){
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0px 0px 30px 10px rgba(255, 255, 255, 0.5);
+}
+
+.element:hover:not(.selected-chord):not(.first-selected-chord):not(.connected-chord)::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px solid rgba(255, 255, 255, 1);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1; /* Ensure it doesn't affect layout */
+}
+
+/* Add cursor pointer to all interactive elements */
+.element {
+    cursor: pointer;
+}
+
+.squared{
+    position: absolute;
+    top:70px;
+    left: -175px;
+    background: rgba(255, 0, 0, 0);
+    border: 2px dashed rgb(255, 255, 255);
+    width: 400px;
+    height: 400px;
+    transform: rotate(45deg);
+    z-index: 0;
+}
+
+
+.svg{
+    width: 70%;
+    height: 70%;
+   
+    
+}
+.possible-chord .svg {
+  /* No animation needed for SVG, it stays still */
+  filter: drop-shadow(0 0 8px #39ff14cc);
+  transition: filter 0.3s;
+  fill: var(--second-chord-color);
+  stroke: var(--second-chord-color);
+  z-index:10
+}
+
+.possible-chord {
+  position: relative;
+  z-index: 2;
+}
+.possible-chord::before{
+  content: '';
+  position: absolute;
+  top: -6px; left: -6px; right: -6px; bottom: -6px;
+  border: 2px dashed #ffffff;
+  border-radius: 50%;
+  pointer-events: none;
+  background: rgba(6, 6, 6, 1);
+  box-shadow: 0 0 16px 4px #37ff1411;
+  animation: spin 8s linear infinite;
+  transform: scale(0.5);
+  
+  z-index: 3;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes counter-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 12px 3px #39ff14cc, 0 0 40px 10px #39ff1444; }
+  100% { box-shadow: 0 0 24px 8px #39ff14ff, 0 0 60px 20px #39ff1444; }
+}
+@keyframes svg-pop {
+  0% { filter: drop-shadow(0 0 8px #39ff14cc) brightness(1); }
+  100% { filter: drop-shadow(0 0 18px #39ff14ff) brightness(1.15); }
+}
+
+.possible-chord {
+ /*  border: 2.5px dashed #39ff14 !important; */
+  box-shadow:
+    0 0 12px 3px var(--second-chord-color)
+    0 0 40px 10px #0ad3ee;
+ /*  background: linear-gradient(135deg, rgba(57,255,20,0.08) 0%, rgba(0,0,0,0.0) 100%); */
+  /* No animation here, it's on ::after */
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s,
+    background 0.3s;
+    transform: skewY(10deg);
+    transform-origin: center;
+  z-index: 2;
+  background-color: #00a6ff00;
+  will-change: box-shadow, background;
+  box-sizing: border-box;
+}
+
+.possible-chord svg path {
+  stroke: #fff !important;
+  fill: #fff !important;
+}
+
+.possible-chord svg path {
+  stroke: var(--second-chord-color) !important;
+  fill: var(--second-chord-color) !important;
+}
+
+.selected-chord {
+    box-shadow: 0 0 40px 10px var(--second-chord-color);
+}
+
+.selected-chord::before {
+  content: '';
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  top: -3px;
+  left: -3px;
+  right: -10px;
+  bottom: -10px;
+  border: 5px solid var(--second-chord-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.first-selected-chord {
+    box-shadow: 0 0 40px 10px var(--first-chord-color);
+}
+
+.first-selected-chord::before {
+  content: '';
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  top: -3px;
+  left: -3px;
+  right: -10px;
+  bottom: -10px;
+  border: 5px solid var(--first-chord-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+/* Hide the after pseudo-element by default */
+.first-selected-chord::after {
+  display: none;
+}
+
+/* Define the dittoScale class for chords that are selected twice */
+/* Define the spinning animations */
+@keyframes spin-clockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-counterclockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+.element.dittoScale {
+  position: relative;
+  z-index: 100;
+}
+
+/* Create spinning circles using additional elements instead of pseudo-elements */
+.element.dittoScale .teal-circle,
+.element.dittoScale .orange-circle {
+  display: none;
+}
+
+/* Add the spinning circles to dittoScale elements */
+.element.dittoScale::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  margin-top: -33px; /* Half the height */
+  margin-left: -33px; /* Half the width */
+  border: 4px dotted var(--second-chord-color);
+  border-radius: 50%;
+  animation: spin-clockwise 7s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  background-color: transparent;
+}
+
+.element.dittoScale::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  left: -3px !important;
+  bottom: 0 !important;
+  margin: auto !important;
+  width: 40px !important;
+  height: 40px !important;
+  border: 4px dotted var(--first-chord-color) !important;
+  border-radius: 50% !important;
+  animation: spin-counterclockwise 7s linear infinite !important;
+  pointer-events: none !important;
+  z-index: 10 !important; /* Higher z-index to ensure visibility */
+  background-color: transparent !important;
+  display: block !important;
+  opacity: 1 !important;
+}
+
+/* Show the after pseudo-element only when the chord has the dittoScale class */
+/* .element.dittoScale::after,
+.element.first-selected-chord.dittoScale::after,
+.element.selected-chord.dittoScale::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: -20px;
+  right: -20px;
+  background: red;
+  bottom: -20px;
+  border: 4px solid var(--second-chord-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1; 
+} */
+.connected-chord {
+    box-shadow: 0px 0px 30px 10px rgba(255, 255, 255, 0.5);
+}
+
+.connected-chord::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px solid rgba(255, 255, 255, 1);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1; /* Ensure it doesn't affect layout */
+}
+
+@media (max-height: 929px) {
+    .scaler {
+      transform: scale(0.7);
+      transform-origin: bottom center;
+    }
+  }
+@media (max-height: 620px) {
+    .content-wrapper {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .scaler {
+      transform: scale(0.8);
+      transform-origin: bottom center;
+      margin-bottom: 20px;
+      width: 90%;
+    }
+    .infoBox {
+      width: 90%;
+      height: 300px;
+    }
+  }
+@media (max-width: 620px) {
+    .content-wrapper {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .scaler {
+      transform: scale(0.8);
+      transform-origin: bottom center;
+      margin-bottom: 20px;
+      width: 90%;
+    }
+    .infoBox {
+      width: 90%;
+      height: 300px;
+    }
+  }
+@media (max-width: 490px) {
+    .content-wrapper {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .scaler {
+      transform: scale(0.6);
+      transform-origin: bottom center;
+      margin-bottom: 20px;
+      width: 95%;
+    }
+    .infoBox {
+      width: 95%;
+      height: 250px;
+    }
+  }
+.sidebar{
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    z-index: 100;
+}
+.content-wrapper {
+    display: flex;
+    width: 100vw;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    /* Ensure the wrapper maintains a stable size */
+    min-height: 600px;
+    transition: all 0.5s ease;
+}
+
+.scaler{
+    position: relative;
+    width: 65%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s ease;
+    transform-origin: center;
+}
+
+/* When no chords are selected, make scaler bigger and centered */
+.content-wrapper:not(:has(.infoBox:not(.hidden))) .scaler {
+    width: 85%;
+    margin: 0 auto;
+    transform: scale(1.2);
+}
+
+  .infoBox{
+    width: 420px;
+    overflow: hidden;
+    height: auto;
+    min-height: 240px;
+    border: 2px solid white;
+    border-radius: 40px;
+    z-index: 100;
+    margin: -100px 20px 0 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    position: fixed; /* Changed from absolute to fixed */
+    right: 40px;
+    top: 60%; /* Center vertically */
+    transform: translateY(-50%); /* Center vertically */
+    contain: layout;
+    overflow: hidden;
+    min-width: 400px;
+    min-height: 650px;
+    pointer-events: auto; /* Ensure it's clickable */
+    transition: all 0.5s ease;
+}
+
+  .infoBox.hidden {
+    transform: translate(calc(100% + 60px), -50%);
+}
+
+  /* When InfoBox is visible, adjust the content wrapper and scaler */
+  .content-wrapper:has(.infoBox:not(.hidden)) {
+    justify-content: flex-start;
+    padding-left: 40px;
+  }
+
+  .content-wrapper:has(.infoBox:not(.hidden)) .scaler {
+    width: 55%;
+    margin-right: auto;
+    transform: scale(0.9);
+  }
+  .infoBox .infoTitle{
+    text-align: center;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .bothChords {
+    background: linear-gradient(135deg, var(--first-chord-color) 50%, var(--second-chord-color) 50%);
+    font-weight: bold;
+    font-size: 15px;
+  }
+  
+  .infoBox .infoTitle {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    color: white;
+    font-size: 20px;
+    padding-bottom: 15px;
+  }
+  
+  .titleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 15px;
+  }
+  
+  .infobox-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .infoBox .infoTitle h2 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 200px;
+  }
+  .firstChord{
+    color: var(--first-chord-color);
+    font-weight: bold;
+    font-size: 28px;
+  }
+  .secondChord{
+    color: var(--second-chord-color);
+    font-weight: bold;
+    font-size: 28px;
+  }
+  
+  .plus {
+    font-size: 28px;
+    margin: 0 8px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .tabbytitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+  }
+  
+  /* Fretboard collapsible section styles */
+  .fretboard-section {
+    margin-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .fretboard-header {
+    transition: background-color 0.2s ease;
+  }
+  
+  .fretboard-header:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .fretboard-content {
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+  
+  .fretboard-content.collapsed {
+    max-height: 0;
+  }
+  .infoElectrons{
+    color: #e64980; 
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .play-button, .swap-button, .color-swap-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .play-button {
+    background-color: rgba(220, 53, 69, 0.8); /* Red background */
+  }
+  
+  .play-button:hover {
+    background-color: rgb(220, 53, 69); /* Brighter red on hover */
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(220, 53, 69, 0.5);
+  }
+  
+  .swap-button {
+    background-color: rgba(52, 152, 219, 0.8); /* Blue background */
+  }
+  
+  .swap-button:hover {
+    background-color: rgb(52, 152, 219); /* Brighter blue on hover */
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+  }
+  
+  .color-swap-button {
+    background-color: rgba(142, 68, 173, 0.8); /* Purple background */
+  }
+  
+  .color-swap-button:hover {
+    background-color: rgb(142, 68, 173); /* Brighter purple on hover */
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(142, 68, 173, 0.5);
+  }
+  
+  .play-icon, .swap-icon, .color-swap-icon {
+    color: white; /* White icon */
+    font-size: 14px;
+    transition: transform 0.2s ease;
+  }
+  
+  .play-button:hover .play-icon,
+  .swap-button:hover .swap-icon,
+  .color-swap-button:hover .color-swap-icon {
+    transform: scale(1.1);
+  }
+  .chordName{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    gap: 10px;
+  }
+  .chordName .plus{
+    font-size: 30px;
+    margin: -10px 0 0 0px;
+  }
+.infoNotes{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+   margin: 0 0 30px 0;
+    width:100%;
+    color: white;
+    font-size: 20px;
+    border-bottom: 2px solid white;
+    padding-bottom: 20px;
+    
+}
+.infoNotes .columnTitleNotes{
+   font-size: 25px;
+   width: 100%;
+   border-bottom: 2px solid white;
+    margin-bottom: 20px;
+}
+/* InfoBox section styling */
+.infoSection {
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    margin-bottom: 5px;
+}
+
+/* Section title styling */
+.sectionTitle {
+    width: 100%;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+/* Scale tabs styling */
+.scaleTabs {
+  display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      gap: 10px;
+      border-radius: 0px;
+      margin: -21px 0 0px -22px;
+      width: 467px;
+      background: #fbfbfb00;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scaleTab {
+  position: relative; /* Add position relative to contain the absolute positioned ::before element */
+  padding: 6px 12px 6px 35px;
+  border-radius: 23px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgb(255, 255, 255);
+  box-shadow: 0px 0px 10px 2px rgba(255, 255, 255, 0);
+  font-weight:500;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.scaleTab::before {
+content: '';
+position: absolute;
+left: 12px;
+top: 50%;
+transform: translateY(-50%);
+width: 14px;
+height: 14px;
+border-radius: 50%;
+background-color: #e63946; /* Red circle for inactive tabs */
+transition: background-color 0.2s ease;
+}
+
+.scaleTab.active::before {
+background-color: #2ecc71; /* Green circle for active tab */
+}
+
+
+
+.scaleTab.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgb(255, 255, 255);
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0);
+    color: #ffffff;
+    font-weight: bold;
+}
+.scaleTab:hover {
+  /* background-color: rgba(255, 255, 255, 0.511); */
+  box-shadow: none;
+  /* transform: translateY(-2px); */
+}
+/* Section content styling */
+.sectionContent {
+    display: flex;
+    padding: 10px 0;
+    gap: 5px;
+    justify-content: center;
+    position: relative;
+}
+
+/* Notes container styling */
+.notesContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    padding: 0 10px;
+    margin: 0 10px 0 -12px;
+}
+
+.notes-wrapper {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 5px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    overflow-x: hidden;
+    white-space: nowrap;
+    min-height: 40px; /* Fixed height to prevent layout shift */
+}
+
+.arrow-left,
+.arrow-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    border: none;
+    outline: none;
+    padding: 0;
+}
+
+.arrow-left {
+    left: 0;
+}
+
+.arrow-right {
+    right: 0;
+}
+
+.arrow-left::before,
+.arrow-right::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.arrow-left::before {
+    border-width: 8px 12px 8px 0;
+    border-color: transparent #ffffff transparent transparent;
+}
+
+.arrow-right::before {
+    border-width: 8px 0 8px 12px;
+    border-color: transparent transparent transparent #ffffff;
+}
+
+.arrow-left:hover,
+.arrow-right:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+
+
+.sectionContent span {
+    margin-right: 5px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(100, 100, 100, 0.3);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 16px;
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+#electron{
+  border-radius: 12px;
+    font-size: 18px;
+    border: 2px solid #9c36b5;
+padding: 15px 15px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+.sectionContent .firstChord {
+    color: var(--first-chord-color);
+    font-weight: bold;
+    border-color: var(--first-chord-color);
+}
+
+.sectionContent .secondChord {
+    color: var(--second-chord-color);
+    font-weight: bold;
+    border-color: var(--second-chord-color);
+}
+
+.sectionContent .bothChords {
+    background: linear-gradient(135deg, var(--first-chord-color) 50%, var(--second-chord-color) 50%);
+    font-weight: bold;
+    border-color: white;
+}
+
+.rootNote {
+    border: 1px solid var(--first-chord-color) !important;
+    box-shadow: 0 0 8px rgba(var(--first-chord-color-rgb, 240, 140, 0), 0);
+    font-weight: bold;
+    border-radius: 50px;
+    position: relative;
+    
+    z-index: 2;
+}
+
+.currentRoot {
+  box-shadow: 0 0 1px 3px rgb(255 255 255);
+    position: relative;
+    border-radius: 50px;
+    z-index: 1;
+}
+
+/* Custom scrollbar for webkit browsers */
+.sectionContent::-webkit-scrollbar {
+    height: 4px;
+}
+
+.sectionContent::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sectionContent::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.sectionContent::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Individual note/electron styling */
+.sectionContent span {
+    padding: 5px 10px;
+    color: #9c36b5;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.sectionContent span:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+  .logo{
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background: var(--second-chord-color);
+    border-radius: 20%;
+    box-shadow: 1px 1px 10px var(--second-chord-color);
+  }
+
+  
+  /* Inspector component styling */
+  .inspector {
+    position: absolute;
+    top: 40px;
+    right: 110px; /* Position next to the logo */
+    z-index: 100;
+    height: 60px;
+    min-width: 150px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    border:2px solid white;
+    box-shadow: 0 0 10px rgba(0, 225, 255, 0.5);
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 225, 255, 0.3);
+  }
+  
+  .inspector-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .inspector-chord-name {
+    color: var(--second-chord-color);
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  
+  .inspector-relationship {
+    color: var(--first-chord-color);
+    font-size: 14px;
+  }
+  
+  .inspector-relationship span {
+    background-color: rgba(100, 100, 100, 0.3);
+    padding: 2px 6px;
+    border-radius: 8px;
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+  }
+  
+  .inspector-placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+  }
+
+/* Controls container for buttons like Deselect All */
+.controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 100;
+}
+
+/* Deselect All button styling */
+.deselect-button {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.deselect-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}

@@ -1,0 +1,134 @@
+.fretboard {
+    width: 600px; /* Wider to accommodate 21 frets */
+    border: 2px solid rgba(255, 255, 255, 0);
+    border-radius: 20px;  
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-color: transparent;
+    /* No rotation for horizontal orientation */
+}
+
+.chorNameTitle {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+/* Fretboard grid */
+.fretboardGrid {
+    display: grid;
+    grid-template-columns: repeat(22, 26px); /* 22 columns for 21 frets + open strings */
+    grid-template-rows: repeat(6, 26px);
+    position: relative;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+/* String lines (horizontal) */
+.stringLine {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 10px -10px 0 0;
+    z-index: 1;
+}
+
+/* Fret lines (vertical) */
+.fretLine {
+    position: absolute;
+    width: 1.5px;
+    height: 80%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 1;
+}
+
+/* Cell for each note position */
+.cell {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+/* Note styling */
+.note {
+    width: 23px;
+    height: 23px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    /* box-shadow: 0 0 3px rgba(0, 0, 0, 0.566); */
+}
+
+/* Notes in the chord */
+.inChord {
+    color: black;
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    border: 2px solid black;
+}
+
+/* Root note styling */
+.rootNote {
+    border: 2px solid red;
+}
+
+/* Fret numbers row */
+.fretNumbersRow {
+    display: grid;
+    grid-template-columns: repeat(22, 1fr);
+    grid-row: 7;
+    grid-column: 1 / span 22;
+    height: 30px;
+    position: relative;
+    margin-top: 5px;
+}
+
+/* Fret number cell */
+.fretNumberCell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: bold;
+}
+
+.firstChord {
+    background-color: var(--first-chord-color);
+    font-weight: bold;
+    font-size: 15px;
+    box-shadow: 0 0 25px rgb(255, 255, 255);
+}
+
+.secondChord {
+    background-color: var(--second-chord-color);
+    font-weight: bold;
+    font-size: 15px;
+}
+
+/* Fretboard background colors */
+.firstFretboard {
+    background-color: rgb(240, 140, 0); /* Orange with transparency */
+    border: 4px solid rgb(255, 255, 255);
+    border-radius: 20px;
+}
+
+.secondFretboard {
+    background-color: rgb(0, 225, 255); /* Blue with transparency */
+    border: 4px solid rgb(255, 255, 255);
+    border-radius: 20px;
+    margin-top: 40px; /* Space between fretboards in horizontal layout */
+}
