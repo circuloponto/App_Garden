@@ -670,6 +670,7 @@ const InfoBox = ({ selectedRoot, selectedChords, chordTypes, chordRootOffsets, o
                     ]
                   } : null
                 }}
+                selectedChords={selectedChords}
               />
             </div>
           </div>
