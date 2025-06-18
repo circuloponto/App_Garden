@@ -1,7 +1,7 @@
 import React from 'react';
 
 // This component takes an SVG URL and renders it inline
-const SvgComponent = ({ src, alt, className }) => {
+const SvgComponent = ({ src, alt, className, electronColor }) => {
   const [svgContent, setSvgContent] = React.useState('');
 
   React.useEffect(() => {
@@ -14,22 +14,41 @@ const SvgComponent = ({ src, alt, className }) => {
         const svgDoc = parser.parseFromString(text, 'image/svg+xml');
         const svgElement = svgDoc.querySelector('svg');
         
-        // Add classes to paths for the color changing useEffect
+        // Get the color to use
+        const color = electronColor !== '#ffffff' ? electronColor : '#be4bdb';
+        
+        // Add classes to paths and apply color directly
         const paths = svgElement.querySelectorAll('path');
         paths.forEach(path => {
           if (path.getAttribute('stroke') && path.getAttribute('stroke') !== 'none') {
             path.classList.add('electron-path');
+            path.setAttribute('stroke', color);
           }
           if (path.getAttribute('fill') && path.getAttribute('fill') !== 'none') {
             path.classList.add('electron-fill');
+            path.setAttribute('fill', color);
           }
         });
+        
+        // Apply drop-shadow filter directly to SVG
+        if (color !== '#ffffff') {
+          // Convert hex color to rgba for the drop-shadow
+          const r = parseInt(color.slice(1, 3), 16);
+          const g = parseInt(color.slice(3, 5), 16);
+          const b = parseInt(color.slice(5, 7), 16);
+          
+          // Apply the drop-shadow filter with the selected color
+          svgElement.setAttribute('filter', `drop-shadow(0 0 8px rgba(${r}, ${g}, ${b}, 1))`);
+        } else {
+          // Reset to default purple color
+          svgElement.setAttribute('filter', 'drop-shadow(0 0 8px rgba(218, 119, 242, 1))');
+        }
         
         // Set the innerHTML
         setSvgContent(svgElement.outerHTML);
       })
       .catch(error => console.error('Error loading SVG:', error));
-  }, [src]);
+  }, [src, electronColor]);
 
   return (
     <div 

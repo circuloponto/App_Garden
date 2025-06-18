@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import SvgComponent from './SvgComponent';
 import styles from './ElectronsDisplay.module.css';
 // Import SVG files directly
@@ -343,14 +343,14 @@ const ElectronsDisplay = ({ isVisible, selectedChords = [], hoveredChord = null,
   // Special debug for sixteenToEighteen electron
   const sixteenToEighteenElectron = allElectrons.find(e => e.id === 'sixteenToEighteen');
   if (sixteenToEighteenElectron) {
-    console.log('sixteenToEighteen electron exists:', sixteenToEighteenElectron);
-    console.log('Is sixteenToEighteen in visible electrons?', 
-      visibleElectrons.some(e => e.id === 'sixteenToEighteen'));
+    console.log('sixteenToEighteen electron found in allElectrons:', sixteenToEighteenElectron);
   } else {
     console.log('sixteenToEighteen electron NOT found in allElectrons!');
   }
-// Effect to update SVG colors when electronColor changes
-  useEffect(() => {
+
+  // Effect to update SVG colors when electronColor or selectedChords changes
+  // Using useLayoutEffect for synchronous DOM updates before browser paint
+  useLayoutEffect(() => {
     // Function to update all SVG colors
     const updateElectronColors = () => {
       // Only update the color attributes, not any other attributes
@@ -404,11 +404,10 @@ const ElectronsDisplay = ({ isVisible, selectedChords = [], hoveredChord = null,
       });
     };
     
-    // Small delay to ensure SVGs are rendered first
-    setTimeout(updateElectronColors, 100);
-  }, [electronColor]);
-
-
+    // Run immediately
+    updateElectronColors();
+  }, [electronColor, selectedChords]);
+  
   // Helper function to render an electron with its SVG
   const renderElectron = (electronClassName, electronId) => {
     // Get the SVG source from the electronSvgMap using the electronId
@@ -429,6 +428,7 @@ const ElectronsDisplay = ({ isVisible, selectedChords = [], hoveredChord = null,
           src={svgSrc} 
           alt={`Electron ${electronId}`} 
           className={styles.visible}
+          electronColor={electronColor}
         />
       </div>
     );

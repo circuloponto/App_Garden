@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 
 import Diagram from './components/Diagram'
@@ -46,7 +46,8 @@ function App() {
   const [electronColor, setElectronColor] = useState('#ffffff'); // White (default)
   
   // Update CSS variables when colors change
-  useEffect(() => {
+  // Using useLayoutEffect for synchronous DOM updates before browser paint
+  useLayoutEffect(() => {
     // Set the main color variables
     document.documentElement.style.setProperty('--first-chord-color', firstChordColor);
     document.documentElement.style.setProperty('--second-chord-color', secondChordColor);

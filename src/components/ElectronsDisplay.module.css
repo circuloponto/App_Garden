@@ -76,7 +76,7 @@
 .electron-svg {
   width: 30%;
   height: 200px;
-  filter: drop-shadow(0 0 10px rgba(218, 119, 242, 0.9));
+  filter: drop-shadow(0 0 10px rgba(var(--electron-color-rgb, 218, 119, 242), 0.9));
   animation: pulse 0.3s infinite alternate;
   border-radius: 10px;
   padding: 20px;

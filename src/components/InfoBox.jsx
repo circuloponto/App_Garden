@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { FaPlay, FaPause, FaExchangeAlt, FaPalette, FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import FretboardDisplayer from './FretboardDisplayer'
 import "./FretboardDisplayer.module.css"
@@ -15,6 +15,23 @@ const formatChordName = (chordName) => {
 };
 
 const InfoBox = ({ selectedRoot, selectedChords, chordTypes, chordRootOffsets, onRootChange, onSwapChords, onDisplayOrderSwap, displayOrderSwapped = false, fretboardOrientation = 'vertical', firstChordColor = '#f08c00', secondChordColor = '#00e1ff', electronColor = '#ffffff' }) => {
+  // Effect to update CSS variables when electronColor changes
+  // Using useLayoutEffect for synchronous DOM updates before browser paint
+  useLayoutEffect(() => {
+    // Set the electron color CSS variable on the document root
+    document.documentElement.style.setProperty('--electron-color', electronColor);
+    
+    // Convert hex to RGB for rgba() functions
+    const hexToRgb = (hex) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? 
+        `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : 
+        null;
+    };
+    
+    // Set RGB values
+    document.documentElement.style.setProperty('--electron-color-rgb', hexToRgb(electronColor));
+  }, [electronColor, selectedChords]);
   // Use the prop for display order swap state instead of local state
   // This allows the parent component to control and share this state with other components
   
@@ -534,20 +551,30 @@ const InfoBox = ({ selectedRoot, selectedChords, chordTypes, chordRootOffsets, o
         <div className="infoSection">
             <div className="sectionTitle">Electrons:</div>
             <div className="sectionContent">
-                {electronNotes.map((note, index) => (
-                    <span 
-                        key={index} 
-                        id="electron" 
-                        className='infoElectrons' 
-                        style={{ 
-                            color: electronColor !== '#ffffff' ? electronColor : '#be4bdb',
-                            textShadow: `0 0 8px ${electronColor !== '#ffffff' ? electronColor : 'rgba(218, 119, 242, 1)'}`,
-                            borderColor: electronColor !== '#ffffff' ? electronColor : '#be4bdb'
-                        }}
-                    >
-                        {note}
-                    </span>
-                ))}
+                {electronNotes.map((note, index) => {
+                    // Determine the color to use
+                    const color = electronColor !== '#ffffff' ? electronColor : '#be4bdb';
+                    // Convert hex to rgba for shadow
+                    const r = parseInt(color.slice(1, 3), 16);
+                    const g = parseInt(color.slice(3, 5), 16);
+                    const b = parseInt(color.slice(5, 7), 16);
+                    const shadowColor = `rgba(${r}, ${g}, ${b}, 1)`;
+                    
+                    return (
+                        <span 
+                            key={index} 
+                            id="electron" 
+                            className='infoElectrons'
+                            style={{
+                                color: color,
+                                textShadow: `0 0 8px ${shadowColor}`,
+                                borderColor: color
+                            }}
+                        >
+                            {note}
+                        </span>
+                    );
+                })}
                 {electronNotes.length === 0 && <span>No electron notes to display</span>}
             </div>
         </div>
