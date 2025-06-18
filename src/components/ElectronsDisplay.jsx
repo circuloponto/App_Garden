@@ -358,7 +358,6 @@ const ElectronsDisplay = ({ isVisible, selectedChords = [], hoveredChord = null,
       
       // Update stroke on path elements
       const pathElements = document.querySelectorAll('.electron-path');
-      console.log('Found', pathElements.length, 'electron path elements');
       
       pathElements.forEach(path => {
         // Only change the stroke color, not any other attributes
@@ -371,7 +370,6 @@ const ElectronsDisplay = ({ isVisible, selectedChords = [], hoveredChord = null,
       
       // Update fill on elements with the electron-fill class
       const fillElements = document.querySelectorAll('.electron-fill');
-      console.log('Found', fillElements.length, 'electron fill elements');
       
       fillElements.forEach(element => {
         // Only change the fill color, not any other attributes
@@ -382,8 +380,28 @@ const ElectronsDisplay = ({ isVisible, selectedChords = [], hoveredChord = null,
         }
       });
       
-      // We don't need to update all SVG elements as that might cause issues
-      // Just focus on the specific elements we want to color
+      // Update the drop-shadow filter color for all SVG elements
+      // First, get all SVG elements
+      const svgElements = document.querySelectorAll('svg');
+      
+      svgElements.forEach(svg => {
+        // Add a class to identify them for styling
+        svg.classList.add('electron-svg');
+        
+        // Update the filter attribute directly on the SVG
+        if (electronColor !== '#ffffff') {
+          // Convert hex color to rgba for the drop-shadow
+          const r = parseInt(electronColor.slice(1, 3), 16);
+          const g = parseInt(electronColor.slice(3, 5), 16);
+          const b = parseInt(electronColor.slice(5, 7), 16);
+          
+          // Apply the new drop-shadow filter with the selected color
+          svg.setAttribute('filter', `drop-shadow(0 0 8px rgba(${r}, ${g}, ${b}, 1))`);
+        } else {
+          // Reset to default purple color
+          svg.setAttribute('filter', 'drop-shadow(0 0 8px rgba(218, 119, 242, 1))');
+        }
+      });
     };
     
     // Small delay to ensure SVGs are rendered first
