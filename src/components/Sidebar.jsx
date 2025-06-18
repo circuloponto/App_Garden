@@ -3,7 +3,18 @@ import Button from './button'
 import RootSelector from './RootSelector'
 import { FaEye, FaEyeSlash, FaChessBoard, FaSlidersH, FaAtom, FaCog } from 'react-icons/fa'
 
-const Sidebar = ({ onRootChange, onToggleSlides, selectedRoot, onToggleMatrix, matrixExpanded, onToggleElectrons, showElectrons, onOpenSettings }) => {
+const Sidebar = ({ 
+  onRootChange, 
+  onToggleSlides, 
+  selectedRoot, 
+  onToggleMatrix, 
+  matrixExpanded, 
+  onToggleElectrons, 
+  showElectrons, 
+  onOpenSettings,
+  onToggleTrichords,
+  showTrichords
+}) => {
   return (
     <div className='buttons'>
       <Button 
@@ -16,11 +27,19 @@ const Sidebar = ({ onRootChange, onToggleSlides, selectedRoot, onToggleMatrix, m
         }}
         activeState={showElectrons ? 1 : 0}
       />
-      <Button 
-        title="Show Trichords" 
-        stateOptions={['OFF', 'ON']} 
-        icon={FaEye}
-      />
+      {/* Only show the trichords button when electrons are enabled */}
+      {showElectrons && (
+        <Button 
+          title="Show Trichords" 
+          stateOptions={['OFF', 'ON']} 
+          icon={FaEye}
+          setViewMode={() => {
+            console.log('Sidebar: Calling onToggleTrichords');
+            onToggleTrichords();
+          }}
+          activeState={showTrichords ? 1 : 0}
+        />
+      )}
    
       <RootSelector 
         options={['C', 'Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']}

@@ -677,3 +677,30 @@ export const chordRootOffsets = {
 }
 
 export const matrix = ["Gb","G","Ab","Eb","E","F","C","Db","D","A","Bb","B",]
+
+// Trichord mappings - maps each chord to its corresponding trichord SVG filenames
+export const trichordMappings = {
+  // Format: chordName: ['svgFileName1', 'svgFileName2', ...]
+  // Each chord can have multiple possible trichord SVGs
+  'one': ['diminishedTrichord', 'one_three'],
+  'three': ['one_three', 'diminishedTrichord'],
+  'thirteen': ['thirteen_fifteen', 'diminishedTrichord'],
+  'fifteen': ['thirteen_fifteen', 'diminishedTrichord'],
+  // Add more mappings as you create more SVGs
+  'five': ['diminishedTrichord'],
+  'eight': ['diminishedTrichord'],
+  'ten': ['diminishedTrichord'],
+  'twelve': ['diminishedTrichord'],
+  'sixteen': ['diminishedTrichord'],
+  'seventeen': ['diminishedTrichord'],
+  'eighteen': ['diminishedTrichord'],
+  'nineteen': ['diminishedTrichord'],
+  'twentyOne': ['diminishedTrichord']
+};
+
+// Trichord display priorities - determines which trichord to show first when multiple are available
+export const trichordPriorities = {
+  'one_three': 1,
+  'thirteen_fifteen': 1,
+  'diminishedTrichord': 2
+};

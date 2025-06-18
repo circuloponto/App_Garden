@@ -13,8 +13,9 @@ import Matrix from './components/Matrix'
 import Inspector2 from './components/Inspector2'
 import ElectronsDisplay from './components/ElectronsDisplay'
 import Settings from './components/Settings'
+import TrichordsDisplay from './components/TrichordsDisplay';
 
-import { connections, chordTypes, chordRootOffsets } from './data/connections';
+import { connections, chordTypes, chordRootOffsets, trichordMappings, trichordPriorities } from './data/connections';
 
 import Logo from './components/Logo'
 
@@ -51,6 +52,8 @@ function App() {
   // Control electrons display visibility with explicit true/false values
   const [showElectrons, setShowElectrons] = useState(false);
   const [hoveredElectron, setHoveredElectron] = useState(null);
+  // Control trichords display visibility - only visible when electrons are also visible
+  const [showTrichords, setShowTrichords] = useState(false);
   // Track if the display order is swapped (for visual purposes only)
   const [displayOrderSwapped, setDisplayOrderSwapped] = useState(false);
   
@@ -404,10 +407,20 @@ function App() {
                 setShowElectrons(currentState => {
                   const newState = !currentState;
                   console.log('Setting showElectrons to:', newState);
+                  
+                  // If turning off electrons, also turn off trichords
+                  if (!newState) {
+                    setShowTrichords(false);
+                  }
+                  
                   return newState;
                 });
               }}
               showElectrons={showElectrons}
+              onToggleTrichords={() => {
+                setShowTrichords(currentState => !currentState);
+              }}
+              showTrichords={showTrichords}
               onOpenSettings={() => setSettingsOpen(true)}
             />
             <div className="content-wrapper">
@@ -429,9 +442,14 @@ function App() {
                       chordRootOffsets={chordRootOffsets}
                       displayOrderSwapped={displayOrderSwapped}
                       electronColor={electronColor}
+                      /* Pass trichord props to Diagram */
+                      showTrichords={showTrichords}
+                      trichordMappings={trichordMappings}
+                      trichordPriorities={trichordPriorities}
                     />
                     <Connections viewMode={selectedChords.length === 2 ? 'fruits' : 'connections'} selectedChords={selectedChords} />
                   </div>
+                  
                   {/* Always show InfoBox when chords are selected */}
                   <InfoBox 
                     selectedRoot={selectedRoot} 

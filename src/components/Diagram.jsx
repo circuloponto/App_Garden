@@ -1,5 +1,6 @@
 import Chord from "./Chord";
 import ElectronsDisplay from "./ElectronsDisplay";
+import TrichordsDisplay from "./TrichordsDisplay";
 import Dash from '../assets/SVGs/Dash.svg';
 import Trigram from '../assets/SVGs/Trigram.svg';
 import TrigramHorizontal from '../assets/SVGs/TrigramHorizontal.svg';
@@ -18,7 +19,24 @@ import SixHorizontal from '../assets/SVGs/6horizontal.svg';
 import SevenHorizontal from '../assets/SVGs/7horizontal.svg';
 
 
-const Diagram = ({ handleChordSelect, selectedChords, possibleChords = [], onChordHover, showElectrons = false, hoveredChord = null, onElectronHover, selectedRoot, chordTypes, chordRootOffsets, displayOrderSwapped = false, electronColor = '#ffffff' }) => {
+const Diagram = ({ 
+    handleChordSelect, 
+    selectedChords, 
+    possibleChords = [], 
+    onChordHover, 
+    showElectrons = false, 
+    hoveredChord = null, 
+    onElectronHover, 
+    selectedRoot, 
+    chordTypes, 
+    chordRootOffsets, 
+    displayOrderSwapped = false, 
+    electronColor = '#ffffff',
+    // New props for trichords
+    showTrichords = false,
+    trichordMappings = {},
+    trichordPriorities = {}
+}) => {
     // Debug log to check if showElectrons prop is being passed correctly
     console.log('Diagram received showElectrons:', showElectrons);
     return (
@@ -33,6 +51,16 @@ const Diagram = ({ handleChordSelect, selectedChords, possibleChords = [], onCho
                 chordTypes={chordTypes}
                 chordRootOffsets={chordRootOffsets}
                 electronColor={electronColor}
+            />}
+            
+            {/* Render TrichordsDisplay component inside diagram */}
+            {showElectrons && showTrichords && <TrichordsDisplay 
+                isVisible={true}
+                selectedChords={selectedChords}
+                hoveredChord={hoveredChord}
+                onTrichordHover={(trichordId) => console.log('Trichord hovered:', trichordId)}
+                trichordMappings={trichordMappings}
+                trichordPriorities={trichordPriorities}
             />}
             <div className="vertical"> 
                 <Chord svg={Dash} className="one" handleChordSelect={handleChordSelect} selectedChords={selectedChords} possibleChords={possibleChords} onChordHover={onChordHover} displayOrderSwapped={displayOrderSwapped}/>
