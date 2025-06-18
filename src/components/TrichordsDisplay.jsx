@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import SvgComponent from './SvgComponent';
 import styles from './TrichordsDisplay.module.css';
 
 // Import SVG files directly
@@ -22,17 +23,20 @@ const trichordSvgMap = {
  * @param {Function} props.onTrichordHover - Callback when a trichord is hovered
  * @param {Object} props.trichordMappings - Mapping of chord names to trichord SVG filenames
  * @param {Object} props.trichordPriorities - Priority order for displaying trichords
+ * @param {string} props.trichordColor - Color for trichords
  */
 const TrichordsDisplay = ({ 
   isVisible = true, 
   selectedChords = [], 
-  hoveredChord = null, 
-  onTrichordHover,
+  hoveredChord = null,
+  onTrichordHover = () => {},
   trichordMappings = {},
-  trichordPriorities = {}
+  trichordPriorities = {},
+  trichordColor = '#ffffff' // Add trichordColor prop with default value
 }) => {
   const [hoveredTrichord, setHoveredTrichord] = useState(null);
   const [visibleTrichords, setVisibleTrichords] = useState([]);
+  const containerRef = useRef(null);
   
   // Update visible trichords when selected chords change
   useEffect(() => {
@@ -41,6 +45,68 @@ const TrichordsDisplay = ({
     console.log('TrichordsDisplay - Props:', { isVisible, selectedChords, hoveredChord });
     setVisibleTrichords(trichords);
   }, [selectedChords, isVisible, hoveredChord]);
+  
+  // Effect to update SVG colors when trichordColor changes
+  // Using useLayoutEffect for synchronous DOM updates before browser paint
+  useLayoutEffect(() => {
+    // Function to update all SVG colors
+    const updateTrichordColors = () => {
+      // Only update the color attributes, not any other attributes
+      // This preserves the original SVG shapes
+      
+      // First, find all g elements with class 'trichord_electron'
+      const trichordElectronGroups = document.querySelectorAll('g.trichord_electron');
+      
+      trichordElectronGroups.forEach(group => {
+        // Update stroke on path elements within trichord_electron groups
+        const pathElements = group.querySelectorAll('path');
+        
+        pathElements.forEach(path => {
+          // Only change the stroke color, not any other attributes
+          if (path.getAttribute('stroke') && path.getAttribute('stroke') !== 'none') {
+            if (trichordColor !== '#ffffff') {
+              path.setAttribute('stroke', trichordColor);
+            } else {
+              path.setAttribute('stroke', '#be4bdb'); // Default color
+            }
+          }
+          
+          // Update fill on elements with fill attribute
+          if (path.getAttribute('fill') && path.getAttribute('fill') !== 'none') {
+            if (trichordColor !== '#ffffff') {
+              path.setAttribute('fill', trichordColor);
+            } else {
+              path.setAttribute('fill', '#be4bdb'); // Default color
+            }
+          }
+        });
+      });
+      
+      // Update the drop-shadow filter color for all SVG elements
+      const svgElements = document.querySelectorAll('.trichord-svg');
+      
+      svgElements.forEach(svg => {
+        if (trichordColor !== '#ffffff') {
+          // Convert hex color to rgba for the drop-shadow
+          const r = parseInt(trichordColor.slice(1, 3), 16);
+          const g = parseInt(trichordColor.slice(3, 5), 16);
+          const b = parseInt(trichordColor.slice(5, 7), 16);
+          
+          // Apply the new drop-shadow filter with the selected color
+          svg.setAttribute('filter', `drop-shadow(0 0 8px rgba(${r}, ${g}, ${b}, 1))`);
+        } else {
+          // Reset to default purple color
+          svg.setAttribute('filter', 'drop-shadow(0 0 8px rgba(218, 119, 242, 1))');
+        }
+      });
+    };
+    
+    // Call the update function
+    if (isVisible && visibleTrichords.length > 0) {
+      // Small delay to ensure DOM elements are ready
+      setTimeout(updateTrichordColors, 100);
+    }
+  }, [trichordColor, isVisible, visibleTrichords]);
   
   // Helper function to get visible trichords based on selected chords
   const getVisibleTrichords = () => {
@@ -134,25 +200,28 @@ const TrichordsDisplay = ({
     return null;
   }
   
+  // Render trichord using SvgComponent
+  const renderTrichord = (trichord) => {
+    return (
+      <div 
+        key={trichord.id}
+        className={`${styles.trichordWrapper} ${hoveredTrichord === trichord.id ? styles.hovered : ''}`}
+        onMouseEnter={() => handleTrichordHover(trichord.id)}
+        onMouseLeave={handleTrichordHoverEnd}
+      >
+        <SvgComponent 
+          src={trichord.src} 
+          className={`${styles.trichordSvg} trichord-svg ${styles[trichord.className]}`}
+          alt={`Trichord: ${trichord.id}`}
+          trichordColor={trichordColor}
+        />
+      </div>
+    );
+  };
+  
   return (
-    <div className={styles.trichordsContainer}>
-      {visibleTrichords.map((trichord) => (
-        <div 
-          key={trichord.id}
-          className={`${styles.trichordWrapper} ${hoveredTrichord === trichord.id ? styles.hovered : ''}`}
-          onMouseEnter={() => handleTrichordHover(trichord.id)}
-          onMouseLeave={handleTrichordHoverEnd}
-        >
-          <img 
-            src={trichord.src} 
-            className={`${styles.trichordSvg} ${styles[trichord.className]}`}
-            alt={`Trichord: ${trichord.id}`}
-          />
-        {/*   <div className={styles.trichordLabel}>
-            {trichord.id}
-          </div> */}
-        </div>
-      ))}
+    <div className={styles.trichordsContainer} ref={containerRef}>
+      {visibleTrichords.map(renderTrichord)}
     </div>
   );
 };

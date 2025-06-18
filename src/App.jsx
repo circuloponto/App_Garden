@@ -446,6 +446,7 @@ function App() {
                       showTrichords={showTrichords}
                       trichordMappings={trichordMappings}
                       trichordPriorities={trichordPriorities}
+                      trichordColor={electronColor} /* Use the same color as electrons */
                     />
                     <Connections viewMode={selectedChords.length === 2 ? 'fruits' : 'connections'} selectedChords={selectedChords} />
                   </div>

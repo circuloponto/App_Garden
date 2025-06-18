@@ -1,7 +1,7 @@
 import React from 'react';
 
 // This component takes an SVG URL and renders it inline
-const SvgComponent = ({ src, alt, className, electronColor }) => {
+const SvgComponent = ({ src, alt, className, electronColor, trichordColor }) => {
   const [svgContent, setSvgContent] = React.useState('');
 
   React.useEffect(() => {
@@ -14,21 +14,49 @@ const SvgComponent = ({ src, alt, className, electronColor }) => {
         const svgDoc = parser.parseFromString(text, 'image/svg+xml');
         const svgElement = svgDoc.querySelector('svg');
         
-        // Get the color to use
-        const color = electronColor !== '#ffffff' ? electronColor : '#be4bdb';
+        // Determine if this is a trichord or electron SVG based on className
+        const isTrichord = className && className.includes('trichord');
+        
+        // Get the color to use based on component type
+        let color;
+        if (isTrichord) {
+          color = trichordColor !== '#ffffff' ? trichordColor : '#be4bdb';
+        } else {
+          color = electronColor !== '#ffffff' ? electronColor : '#be4bdb';
+        }
         
         // Add classes to paths and apply color directly
-        const paths = svgElement.querySelectorAll('path');
-        paths.forEach(path => {
-          if (path.getAttribute('stroke') && path.getAttribute('stroke') !== 'none') {
-            path.classList.add('electron-path');
-            path.setAttribute('stroke', color);
-          }
-          if (path.getAttribute('fill') && path.getAttribute('fill') !== 'none') {
-            path.classList.add('electron-fill');
-            path.setAttribute('fill', color);
-          }
-        });
+        if (isTrichord) {
+          // For trichords, only target paths within g elements with class 'trichord_electron'
+          const trichordElectronGroups = svgElement.querySelectorAll('g.trichord_electron');
+          
+          trichordElectronGroups.forEach(group => {
+            const paths = group.querySelectorAll('path');
+            paths.forEach(path => {
+              if (path.getAttribute('stroke') && path.getAttribute('stroke') !== 'none') {
+                path.classList.add('trichord-path');
+                path.setAttribute('stroke', color);
+              }
+              if (path.getAttribute('fill') && path.getAttribute('fill') !== 'none') {
+                path.classList.add('trichord-fill');
+                path.setAttribute('fill', color);
+              }
+            });
+          });
+        } else {
+          // For electrons, continue with the existing behavior
+          const paths = svgElement.querySelectorAll('path');
+          paths.forEach(path => {
+            if (path.getAttribute('stroke') && path.getAttribute('stroke') !== 'none') {
+              path.classList.add('electron-path');
+              path.setAttribute('stroke', color);
+            }
+            if (path.getAttribute('fill') && path.getAttribute('fill') !== 'none') {
+              path.classList.add('electron-fill');
+              path.setAttribute('fill', color);
+            }
+          });
+        }
         
         // Apply drop-shadow filter directly to SVG
         if (color !== '#ffffff') {
@@ -48,7 +76,7 @@ const SvgComponent = ({ src, alt, className, electronColor }) => {
         setSvgContent(svgElement.outerHTML);
       })
       .catch(error => console.error('Error loading SVG:', error));
-  }, [src, electronColor]);
+  }, [src, electronColor, trichordColor, className]);
 
   return (
     <div 

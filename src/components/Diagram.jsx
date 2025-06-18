@@ -35,7 +35,8 @@ const Diagram = ({
     // New props for trichords
     showTrichords = false,
     trichordMappings = {},
-    trichordPriorities = {}
+    trichordPriorities = {},
+    trichordColor = '#ffffff' // Add trichordColor prop with default value
 }) => {
     // Debug log to check if showElectrons prop is being passed correctly
     console.log('Diagram received showElectrons:', showElectrons);
@@ -61,6 +62,7 @@ const Diagram = ({
                 onTrichordHover={(trichordId) => console.log('Trichord hovered:', trichordId)}
                 trichordMappings={trichordMappings}
                 trichordPriorities={trichordPriorities}
+                trichordColor={trichordColor}
             />}
             <div className="vertical"> 
                 <Chord svg={Dash} className="one" handleChordSelect={handleChordSelect} selectedChords={selectedChords} possibleChords={possibleChords} onChordHover={onChordHover} displayOrderSwapped={displayOrderSwapped}/>
