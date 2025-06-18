@@ -23,10 +23,26 @@ import './tutorial.css'
 
 function App() {
   const location = useLocation();
+  const { state } = location;
   
   // Dynamic view mode based on selection count
   const [viewMode, setViewMode] = useState('connections');
-  const [selectedChords, setSelectedChords] = useState([]); // e.g. ['four', 'five']
+  // Initialize selectedChords with preserved state if available
+  const [selectedChords, setSelectedChords] = useState(() => {
+    if (state && state.preserveSelections === true && Array.isArray(state.selectedChords)) {
+      console.log('Restoring chord selections from navigation state:', state.selectedChords);
+      return state.selectedChords;
+    }
+    return [];
+  }); // e.g. ['four', 'five']
+  
+  // Effect to handle chord selection preservation when navigating back from fretboard
+  useEffect(() => {
+    if (state && state.preserveSelections === true && Array.isArray(state.selectedChords)) {
+      console.log('Updating chord selections from navigation state:', state.selectedChords);
+      setSelectedChords(state.selectedChords);
+    }
+  }, [state]);
   const [tutorialStep, setTutorialStep] = useState(0); // 0 = not showing, 1 = chords, 2 = connections
   const [selectedRoot, setSelectedRoot] = useState('C'); // Default root note
   const [showSlides, setShowSlides] = useState(false); // Control slide presentation visibility

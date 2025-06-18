@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import FretboardDisplayerNew from '../components/fretboardDisplayerNew';
 import styles from './fretboardPage.module.css';
 
 const FretboardPage = () => {
   const location = useLocation();
-  const { scaleData } = location.state || {};
+  const navigate = useNavigate();
+  // Extract all state data from location
+  const { scaleData, selectedChords = [] } = location.state || {};
   
   // Default chord data if no scale data is provided
   const defaultFirstChord = {
@@ -51,7 +53,16 @@ const FretboardPage = () => {
     <div className={styles.fretboardPage}>
       <div className={styles.header}>
         
-        <Link to="/" className={styles.backLink}>Back to Home</Link>
+        <Link 
+          to="/" 
+          state={{ 
+            preserveSelections: true, 
+            selectedChords: selectedChords 
+          }} 
+          className={styles.backLink}
+        >
+          Back to Home
+        </Link>
         <button 
           className={styles.orientationButton}
           onClick={toggleOrientation}
