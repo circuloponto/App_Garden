@@ -14,7 +14,7 @@ const formatChordName = (chordName) => {
     .replace(/dim/g, '°');
 };
 
-const InfoBox = ({ selectedRoot, selectedChords, chordTypes, chordRootOffsets, onRootChange, onSwapChords, onDisplayOrderSwap, displayOrderSwapped = false, fretboardOrientation = 'vertical', firstChordColor = '#f08c00', secondChordColor = '#00e1ff' }) => {
+const InfoBox = ({ selectedRoot, selectedChords, chordTypes, chordRootOffsets, onRootChange, onSwapChords, onDisplayOrderSwap, displayOrderSwapped = false, fretboardOrientation = 'vertical', firstChordColor = '#f08c00', secondChordColor = '#00e1ff', electronColor = '#ffffff' }) => {
   // Use the prop for display order swap state instead of local state
   // This allows the parent component to control and share this state with other components
   
@@ -535,7 +535,18 @@ const InfoBox = ({ selectedRoot, selectedChords, chordTypes, chordRootOffsets, o
             <div className="sectionTitle">Electrons:</div>
             <div className="sectionContent">
                 {electronNotes.map((note, index) => (
-                    <span key={index}id="electron" className='infoElectrons'>{note}</span>
+                    <span 
+                        key={index} 
+                        id="electron" 
+                        className='infoElectrons' 
+                        style={{ 
+                            color: electronColor !== '#ffffff' ? electronColor : '#be4bdb',
+                            textShadow: `0 0 8px ${electronColor !== '#ffffff' ? electronColor : 'rgba(218, 119, 242, 1)'}`,
+                            borderColor: electronColor !== '#ffffff' ? electronColor : '#be4bdb'
+                        }}
+                    >
+                        {note}
+                    </span>
                 ))}
                 {electronNotes.length === 0 && <span>No electron notes to display</span>}
             </div>

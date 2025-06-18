@@ -432,6 +432,7 @@ function App() {
                     fretboardOrientation={fretboardOrientation}
                     firstChordColor={firstChordColor}
                     secondChordColor={secondChordColor}
+                    electronColor={electronColor}
                   />
                   
                   {/* Show Matrix regardless of chord selection state */}
