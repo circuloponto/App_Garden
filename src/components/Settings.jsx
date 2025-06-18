@@ -84,42 +84,48 @@ const Settings = ({
             <h3>Chord Colors</h3>
             <div className="color-settings" onClick={(e) => e.stopPropagation()}>
               <div className="color-option">
-                <label>First Chord Color</label>
-                <div className="color-preview" style={{ backgroundColor: localFirstColor }}></div>
+                <label htmlFor="first-chord-color">First Chord Color</label>
                 <input
+                  id="first-chord-color"
                   type="color"
                   value={localFirstColor}
+                  className="color-input"
                   onChange={(e) => {
                     e.stopPropagation();
                     setLocalFirstColor(e.target.value);
                   }}
                 />
+                <span className="color-value">{localFirstColor}</span>
               </div>
               
               <div className="color-option">
-                <label>Second Chord Color</label>
-                <div className="color-preview" style={{ backgroundColor: localSecondColor }}></div>
+                <label htmlFor="second-chord-color">Second Chord Color</label>
                 <input
+                  id="second-chord-color"
                   type="color"
                   value={localSecondColor}
+                  className="color-input"
                   onChange={(e) => {
                     e.stopPropagation();
                     setLocalSecondColor(e.target.value);
                   }}
                 />
+                <span className="color-value">{localSecondColor}</span>
               </div>
               
               <div className="color-option">
-                <label>Electron Color</label>
-                <div className="color-preview" style={{ backgroundColor: localElectronColor }}></div>
+                <label htmlFor="electron-color">Electron Color</label>
                 <input
+                  id="electron-color"
                   type="color"
                   value={localElectronColor}
+                  className="color-input"
                   onChange={(e) => {
                     e.stopPropagation();
                     setLocalElectronColor(e.target.value);
                   }}
                 />
+                <span className="color-value">{localElectronColor}</span>
               </div>
             </div>
           </div>
