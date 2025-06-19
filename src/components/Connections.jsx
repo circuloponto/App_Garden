@@ -56,6 +56,7 @@ const Connections = ({ viewMode, selectedChords }) => {
     if (selectedChords.length === 0) {
       return (
         <div className='allConnections'>
+          {/* Show connections from the original connections array */}
           {connections.map(conn => (
             conn.svg && svgMap[conn.svg] ? (
               <img
@@ -68,6 +69,32 @@ const Connections = ({ viewMode, selectedChords }) => {
               <div key={`zero-${conn.from}-${conn.to}-${conn.className}-div`} className={`connection ${conn.className}`}></div>
             )
           ))}
+          
+          {/* Also show connections from connections2 array */}
+          {connections2.flatMap(conn => {
+            return conn.classNames.map((className, index) => {
+              // Create a unique key using chord names, className and index
+              const uniqueKey = `zero-${conn.chords.join('-')}-${className}-${index}`;
+              
+              if (conn.svg && svgMap[conn.svg]) {
+                return (
+                  <img
+                    key={uniqueKey}
+                    src={svgMap[conn.svg]}
+                    className={`connection ${className}`}
+                    alt={`Connection between ${conn.chords.join(' and ')}`}
+                  />
+                );
+              } else {
+                return (
+                  <div 
+                    key={uniqueKey} 
+                    className={`connection ${className}`}
+                  ></div>
+                );
+              }
+            });
+          })}
         </div>
       );
     }

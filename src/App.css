@@ -548,7 +548,7 @@
     transform: rotate(90deg);
     transform-origin: bottom;
 }
-.nineteenToTwentyone1{
+.nineteenToTwentyOne1{
     position: absolute;
     top:31%;
     left:76%;
@@ -559,7 +559,7 @@
    transform: rotate(90deg);
    transform-origin: bottom;
 }
-.nineteenToTwentyone2{
+.nineteenToTwentyOne2{
     position: absolute;
     top:32%;
     left:76%;
@@ -570,7 +570,7 @@
    transform: rotate(90deg);
    transform-origin: bottom;
 }
-.nineteenToTwentyone3{
+.nineteenToTwentyOne3{
     position: absolute;
     top:33%;
     left:76%;
@@ -581,7 +581,7 @@
    transform: rotate(90deg);
    transform-origin: bottom;
 }
-.nineteenToTwentyone4{
+.nineteenToTwentyOne4{
     position: absolute;
     top:34%;
     left:76%;
@@ -963,7 +963,7 @@ transform-origin: bottom;
     visibility: hidden;
 } 
 
-.nineteenToTwentyOne1{
+/* .nineteenToTwentyOne1{
     position: absolute;
     top: 50.2%;
     left: 80%;
@@ -972,7 +972,7 @@ transform-origin: bottom;
     height: 1px;
     width: 110px;
     background: rgb(255, 255, 255);
-}
+} */
 .horizontal{
   position: absolute;
   top: 255px;
