@@ -240,7 +240,7 @@
 .oneToThree1{
   position: absolute;
   top:55px;
-  left: 50%;
+  left: 50.4%;
   height:60px;
   width: 1px;
   background: rgba(255, 255, 255, 0.6);
@@ -250,33 +250,33 @@
 .oneToThree2{
     position: absolute;
     top:9%;
-    left: 49.3%;
+    left: 48.2%;
     transform: rotate(0deg);
     height: 60px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.5);
    transform: rotate(0deg);
    transform-origin: bottom;
 }
 .oneToThree3{
     position: absolute;
     top:9%;
-    left: 50.6%;
+    left: 49.3%;
     transform: rotate(0deg);
     height: 60px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.5);
    transform: rotate(0deg);
    transform-origin: bottom;
 }
 .oneToThree4{
     position: absolute;
     top:9%;
-    left: 51.9%;
+    left: 51.5%;
     transform: rotate(0deg);
     height: 60px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.54);
    transform: rotate(0deg);
    transform-origin: bottom;
 }
@@ -361,17 +361,17 @@
 .tenToTwelve1{
     position: absolute;
     top:83%;
-    left: 50%;
+    left: 50.5%;
     height:50px;
     width: 1px;
     background: rgba(255, 255, 255, 0.6);
    transform: rotate(0deg);
    transform-origin: bottom;
 }
-/* .tenToTwelve2{
+.tenToTwelve2{
     position: absolute;
     top:83%;    
-    left: 49.3%;
+    left: 49.5%;
     transform: rotate(0deg);
     height: 50px;
     width: 1px;
@@ -382,25 +382,25 @@
 .tenToTwelve3{
     position: absolute;
     top:83%;
-    left: 50.6%;
+    left: 48.5%;
     transform: rotate(0deg);
     height: 50px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.5);
    transform: rotate(0deg);
    transform-origin: bottom;
 }
 .tenToTwelve4{
     position: absolute;
     top:83%; 
-    left: 51.9%;
+    left: 51.5%;
     transform: rotate(0deg);
     height: 50px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.5);
    transform: rotate(0deg);
    transform-origin: bottom;
-} */
+}
 .thirteenToFifteen1{
     position: absolute;
     top:32%;
@@ -408,29 +408,29 @@
     transform: rotate(0deg);
     height: 110px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgb(255, 255, 255, 0.5);
    transform: rotate(90deg);
    transform-origin: bottom;
 }
-/* .thirteenToFifteen2{
-    position: absolute;
-    top:32%;
-    left: 5%;
-    transform: rotate(0deg);
-    height: 110px;
-    width: 1px;
-    background: rgb(255, 255, 255);
-   transform: rotate(90deg);
-   transform-origin: bottom;
-}
-.thirteenToFifteen3{
+ .thirteenToFifteen2{
     position: absolute;
     top:33%;
     left: 5%;
     transform: rotate(0deg);
     height: 110px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgb(255, 255, 255, 0.5);
+   transform: rotate(90deg);
+   transform-origin: bottom;
+}
+.thirteenToFifteen3{
+    position: absolute;
+    top:31%;
+    left: 5%;
+    transform: rotate(0deg);
+    height: 110px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.5);
    transform: rotate(90deg);
    transform-origin: bottom;
 }
@@ -441,10 +441,12 @@
     transform: rotate(0deg);
     height: 110px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.5);
    transform: rotate(90deg);
    transform-origin: bottom;
-}   */ 
+}   
+
+
 .fifteenToSixteen{
     position: absolute;
     top:32.5%;
@@ -548,23 +550,23 @@
 }
 .nineteenToTwentyone1{
     position: absolute;
-    top:32%;
+    top:31%;
     left:76%;
     transform: rotate(0deg);
     height: 110px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgb(255, 255, 255,0.5);
    transform: rotate(90deg);
    transform-origin: bottom;
 }
-/* .nineteenToTwentyone2{
+.nineteenToTwentyone2{
     position: absolute;
     top:32%;
     left:76%;
     transform: rotate(0deg);
     height: 110px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgb(255, 255, 255,0.5);
    transform: rotate(90deg);
    transform-origin: bottom;
 }
@@ -575,7 +577,7 @@
     transform: rotate(0deg);
     height: 110px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.5);
    transform: rotate(90deg);
    transform-origin: bottom;
 }
@@ -586,10 +588,10 @@
     transform: rotate(0deg);
     height: 110px;
     width: 1px;
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0.5);
    transform: rotate(90deg);
    transform-origin: bottom;
-} */ 
+} 
 .nineteenToFive1{
     position: absolute;
     top: 25%;
@@ -964,7 +966,7 @@ transform-origin: bottom;
 .nineteenToTwentyOne1{
     position: absolute;
     top: 50.2%;
-    left: 81%;
+    left: 80%;
     transform: rotate(0deg);
     transform-style: preserve-3d;
     height: 1px;

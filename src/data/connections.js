@@ -10,7 +10,7 @@ export const connections = [
         to: "three",
         className: "oneToThree1"
     },
-    /* {
+    {
         from: "one",
         to: "three",
         className: "oneToThree2"
@@ -24,7 +24,7 @@ export const connections = [
         from: "one",
         to: "three",
         className: "oneToThree4"
-    }, */
+    },
    
     /* {
         from: "one",
@@ -80,31 +80,22 @@ export const connections = [
         to: "twelve",
         className: "tenToTwelve1"
     },
-   /*  {
-        from: "twelve",
-        to: "three",
-        className: "tenToTwelve1"
-    }, */
-    /* {
-        from: "twelve",
-        to: "thirteen",
-        className: "tenToTwelve1"
-    }, */
-    /* {
-        from: "twelve",
-        to: "twentyOne",
-        className: "tenToTwelve1"
-    }, */
-   /*  {
-        from: "twelve",
-        to: "fifteen",
-        className: "tenToTwelve1"
-    }, */
-   /*  {
-        from: "twelve",
-        to: "nineteen",
-        className: "tenToTwelve1"
-    }, */
+    {
+        from: "ten",
+        to: "twelve",
+        className: "tenToTwelve2"
+    },
+    {
+        from: "ten",
+        to: "twelve",
+        className: "tenToTwelve3"
+    },
+    {
+        from: "ten",
+        to: "twelve",
+        className: "tenToTwelve4"
+    },
+   
     
     {
         from: "fifteen",
@@ -128,26 +119,22 @@ export const connections = [
         to: "fifteen",
         className: "thirteenToFifteen1"
     },
-   /*  {
+    {
         from: "thirteen",
-        to: "three",
-        className: "thirteenToFifteen1"
-    }, */
-    /* {
+        to: "fifteen",
+        className: "thirteenToFifteen2"
+    },
+    {
         from: "thirteen",
-        to: "ten",
-        className: "thirteenToFifteen1"
-    }, */
-    /* {
+        to: "fifteen",
+        className: "thirteenToFifteen3"
+    },
+    {
         from: "thirteen",
-        to: "nineteen",
-        className: "thirteenToFifteen1"
-    }, */
-    /* {
-        from: "thirteen",
-        to: "twentyOne",
-        className: "thirteenToFifteen1"
-    }, */
+        to: "fifteen",
+        className: "thirteenToFifteen4"
+    },
+  
    
     {
         from: "fifteen",
@@ -255,6 +242,21 @@ export const connections = [
         to: "twentyOne",
         className: "nineteenToTwentyone1"
     },
+    {
+        from: "nineteen",
+        to: "twentyOne",
+        className: "nineteenToTwentyone2"
+    },
+    {
+        from: "nineteen",
+        to: "twentyOne",
+        className: "nineteenToTwentyone3"
+    },
+    {
+        from: "nineteen",
+        to: "twentyOne",
+        className: "nineteenToTwentyone4"
+    },
     
     {
         from: "nineteen",
@@ -307,6 +309,18 @@ export const connections2 = [
     {
         chords: ["one","three"],
         classNames:[ "oneToThree1"]
+    },
+    {
+        chords: ["one","three"],
+        classNames:[ "oneToThree2"]
+    },
+    {
+        chords: ["one","three"],
+        classNames:[ "oneToThree3"]
+    },
+    {
+        chords: ["one","three"],
+        classNames:[ "oneToThree4"]
     },
     {
         chords: ["three","five"],
@@ -375,6 +389,18 @@ export const connections2 = [
         classNames:[ "tenToTwelve1"]
     },
     {
+        chords: ["ten","twelve"],
+        classNames:[ "tenToTwelve2"]
+    },
+    {
+        chords: ["ten","twelve"],
+        classNames:[ "tenToTwelve3"]
+    },
+    {
+        chords: ["ten","twelve"],
+        classNames:[ "tenToTwelve4"]
+    },
+    {
         chords: ["ten","fifteen"],
         classNames:[ "fifteenToTen1","fifteenToTen2"]
     },
@@ -402,6 +428,18 @@ export const connections2 = [
     {
         chords: ["fifteen","thirteen"],
         classNames:[ "thirteenToFifteen1"],
+    },
+    {
+        chords: ["fifteen","thirteen"],
+        classNames:[ "thirteenToFifteen2"],
+    },
+    {
+        chords: ["fifteen","thirteen"],
+        classNames:[ "thirteenToFifteen3"],
+    },
+    {
+        chords: ["fifteen","thirteen"],
+        classNames:[ "thirteenToFifteen4"],
     },
     {
         chords: ["fifteen","sixteen"],
@@ -446,6 +484,18 @@ export const connections2 = [
     {
         chords: ["nineteen","twentyOne"],
         classNames:[ "nineteenToTwentyOne1"],
+    },
+    {
+        chords: ["nineteen","twentyOne"],
+        classNames:[ "nineteenToTwentyOne2"],
+    },
+    {
+        chords: ["nineteen","twentyOne"],
+        classNames:[ "nineteenToTwentyOne3"],
+    },
+    {
+        chords: ["nineteen","twentyOne"],
+        classNames:[ "nineteenToTwentyOne4"],
     },
 ]
 
