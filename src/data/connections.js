@@ -26,11 +26,66 @@ export const connections = [
         className: "oneToThree4"
     },
    
-    /* {
+    {
         from: "one",
-        to: "thirteen",
-        className: "oneToThree1"
-    }, */
+        to: "ten",
+        className: "tenToTwelve1"
+    },
+    {
+        from: "one",
+        to: "ten",
+        className: "tenToTwelve2"
+    },
+    {
+        from: "one",
+        to: "ten",
+        className: "tenToTwelve3"
+    },
+    {
+        from: "one",
+        to: "ten",
+        className: "tenToTwelve4"
+    },
+    {
+        from: "one",
+        to: "fifteen",
+        className: "thirteenTofifteen1"
+    },
+    {
+        from: "one",
+        to: "fifteen",
+        className: "thirteenTofifteen2"
+    },
+    {
+        from: "one",
+        to: "fifteen",
+        className: "thirteenTofifteen3"
+    },
+    {
+        from: "one",
+        to: "fifteen",
+        className: "thirteenTofifteen4"
+    },
+    {
+        from: "one",
+        to: "nineteen",
+        className: "nineteenToTwentyOne1"
+    },
+    {
+        from: "one",
+        to: "nineteen",
+        className: "nineteenToTwentyOne2"
+    },
+    {
+        from: "one",
+        to: "nineteen",
+        className: "nineteenToTwentyOne3"
+    },
+    {
+        from: "one",
+        to: "nineteen",
+        className: "nineteenToTwentyOne4"
+    },
     
     
     
@@ -95,6 +150,28 @@ export const connections = [
         to: "twelve",
         className: "tenToTwelve4"
     },
+    {
+        from: "ten",
+        to: "fifteen",
+        className: "fifteenToTen1"
+    },
+    {
+        from: "ten",
+        to: "fifteen",
+        className: "fifteenToTen2"
+    },
+   
+    {
+        from: "ten",
+        to: "nineteen",
+        className: "nineteenToTen1"
+    },
+    {
+        from: "ten",
+        to: "nineteen",
+        className: "nineteenToTen2"
+    },
+   
    
     
     {
@@ -321,6 +398,18 @@ export const connections2 = [
     {
         chords: ["one","three"],
         classNames:[ "oneToThree4"]
+    },
+    {
+        chords: ["one","ten"],
+        classNames:[ "tenToTwelve1","tenToTwelve2","tenToTwelve3","tenToTwelve4"]
+    },
+    {
+        chords: ["one","fifteen"],
+        classNames:[ "thirteenToFifteen1","thirteenToFifteen2","thirteenToFifteen3","thirteenToFifteen4"]
+    },
+    {
+        chords: ["one","nineteen"],
+        classNames:[ "nineteenToTwentyOne1","nineteenToTwentyOne2","nineteenToTwentyOne3","nineteenToTwentyOne4"]
     },
     {
         chords: ["three","five"],
@@ -588,12 +677,19 @@ export const chordRootOffsets = {
     
     
     "one_one": 1,  // original GOOD
-    "one_three":1,  // original GOOD
-    "three_one":-1, // GOOD
+    "one_three":[1, 4, 7, 10],  // original GOOD
+    "three_one":[-1, -4, -7, -10], // GOOD
     "one_twentyOne": 1,// original GOOD
     "twentyOne_one": -1, // GOOD
+    
     "one_twelve":1, // original // GOOD
     "twelve_one":-1, // GOOD
+    "one_ten":[1,4,7,10],
+    "ten_one":[-1,-4,-7,-10],
+    "one_fifteen":[1,4,7,10],
+    "fifteen_one":[-1,-4,-7,-10],
+    "one_nineteen":[1,4,7,10],
+    "nineteen_one":[-1,-4,-7,-10],
 
 
     "three_three":1,// original GOOD
@@ -621,8 +717,10 @@ export const chordRootOffsets = {
     "ten_ten":1, // original
     "ten_twelve":-1,// originalGOOD
     "twelve_ten":1, // GOOD
-    "ten_nineteen":1,// original GOOD
-    "nineteen_ten":-1, // GOOD
+    "ten_fifteen":[1,7],
+    "fifteen_ten":[-1,-7],
+    "ten_nineteen":[1,7],// original GOOD
+    "nineteen_ten":[-1,-7], // GOOD
   //"ten_thirteen":-11, 
    
    
