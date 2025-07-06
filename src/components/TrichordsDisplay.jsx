@@ -548,6 +548,79 @@ const TrichordsDisplay = ({
       return [];
     }
     
+    // Special handling for exactly 2 selected chords - show only common trichords
+    if (selectedChords.length === 2) {
+      console.log('%cExactly 2 chords selected - filtering for common trichords', 'color: #ff9; font-weight: bold');
+      const chord1 = selectedChords[0];
+      const chord2 = selectedChords[1];
+      
+      // Make sure both chords exist in the mappings
+      if (!trichordMappings[chord1] || !trichordMappings[chord2]) {
+        console.warn('One or both selected chords not found in trichord mappings');
+        console.log('Available chord mappings:', Object.keys(trichordMappings).join(', '));
+        // Fall back to normal behavior
+      } else {
+        const trichords1 = trichordMappings[chord1];
+        const trichords2 = trichordMappings[chord2];
+        
+        console.log(`Chord ${chord1} has ${trichords1.length} trichords:`, trichords1);
+        console.log(`Chord ${chord2} has ${trichords2.length} trichords:`, trichords2);
+        
+        // Find common trichords between the two selected chords
+        const commonTrichords = trichords1.filter(trichord => trichords2.includes(trichord));
+        
+        console.log(`Found ${commonTrichords.length} common trichords:`, commonTrichords);
+        
+        if (commonTrichords.length === 0) {
+          console.log('No common trichords found - showing all trichords from both chords');
+          // If no common trichords, fall back to normal behavior
+        } else {
+          // Sort common trichords by priority and map to trichord objects
+          const trichords = commonTrichords
+            .sort((a, b) => (trichordPriorities[a] || 999) - (trichordPriorities[b] || 999))
+            .map(trichordType => {
+              console.log(`%cMapping common trichord: ${trichordType}`, 'color: #afa');
+              
+              try {
+                // Get both electron and tabby versions of the trichord
+                const svgPaths = getTrichordSvg(trichordType);
+                
+                if (!svgPaths) {
+                  console.error(`❌ No SVG paths found for ${trichordType}`);
+                  return null;
+                }
+                
+                console.log(`  SVG paths for ${trichordType}:`, {
+                  electron: svgPaths.electron ? '✓' : '✗',
+                  tabby: svgPaths.tabby ? '✓' : '✗'
+                });
+                
+                // Create a trichord object with both SVG components
+                const trichord = {
+                  id: trichordType,
+                  electron: svgPaths.electron,
+                  tabby: svgPaths.tabby,
+                  className: `trichord_${trichordType}`
+                };
+                console.log(`  ✅ Created trichord object for ${trichordType}`);
+                return trichord;
+              } catch (error) {
+                console.error(`  ❌ Error creating trichord object for ${trichordType}:`, error);
+                return null;
+              }
+            })
+            .filter(Boolean);
+          
+          console.log('%cFINAL COMMON TRICHORDS:', 'background: #4a4a4a; color: #ff9; padding: 3px; font-weight: bold');
+          trichords.forEach(t => console.log(`  - ${t.id}`));
+          console.log(`Total: ${trichords.length} common trichords`);
+          console.log('%c======= END GETTING VISIBLE TRICHORDS =======', 'background: #4a4a4a; color: #ff9; padding: 3px; font-weight: bold');
+          return trichords;
+        }
+      }
+    }
+    
+    // Default behavior for 1 or 3+ selected chords
     // Get all unique trichord types for all selected chords
     const allTrichordTypes = new Set();
     // Track which trichords have already been rendered to avoid duplicates

@@ -525,9 +525,17 @@ const InfoBox = ({ selectedRoot, selectedChords, chordTypes, chordRootOffsets, o
                             className = 'secondChord';
                         }
                         
-                        // Highlight the root note
-                        if (note === selectedRoot) {
-                            className += ' rootNote';
+                        // Highlight the root note based on the display order
+                        if (displayOrderSwapped) {
+                            // When colors are swapped, highlight the root of the second chord (now displayed as first)
+                            if (calculatedChords.length > 1 && note === calculatedChords[1].root) {
+                                className += ' rootNote';
+                            }
+                        } else {
+                            // Normal order - highlight the first chord's root
+                            if (calculatedChords.length > 0 && note === calculatedChords[0].root) {
+                                className += ' rootNote';
+                            }
                         }
                         
                         return (
