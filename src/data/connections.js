@@ -717,8 +717,8 @@ export const chordRootOffsets = {
     "ten_ten":1, // original
     "ten_twelve":-1,// originalGOOD
     "twelve_ten":1, // GOOD
-    "ten_fifteen":[1,7],
-    "fifteen_ten":[-1,-7],
+    "ten_fifteen":[-1,5],
+    "fifteen_ten":[1,7],
     "ten_nineteen":[1,7],// original GOOD
     "nineteen_ten":[-1,-7], // GOOD
   //"ten_thirteen":-11, 
@@ -830,25 +830,28 @@ export const matrix = ["Gb","G","Ab","Eb","E","F","C","Db","D","A","Bb","B",]
 export const trichordMappings = {
   // Format: chordName: ['svgFileName1', 'svgFileName2', ...]
   // Each chord can have multiple possible trichord SVGs
-  'one': ['diminishedTrichord', 'one_three'],
-  'three': ['one_three', 'diminishedTrichord'],
-  'thirteen': ['thirteen_fifteen', 'diminishedTrichord'],
-  'fifteen': ['thirteen_fifteen', 'diminishedTrichord'],
-  // Add more mappings as you create more SVGs
-  'five': ['diminishedTrichord'],
-  'eight': ['diminishedTrichord'],
-  'ten': ['diminishedTrichord'],
-  'twelve': ['diminishedTrichord'],
-  'sixteen': ['diminishedTrichord'],
-  'seventeen': ['diminishedTrichord'],
-  'eighteen': ['diminishedTrichord'],
-  'nineteen': ['diminishedTrichord'],
-  'twentyOne': ['diminishedTrichord']
+  // Mapping based on available SVG files in the trichords folder
+  'one': ['diminishedTrichord','one_three','thirteen_fifteen', 'nineteen_twentyOne', 'ten_twelve'],
+  'three': ['one_three','fifteen_three1', 'fifteen_three2','three_five1', 'three_five2', 'three_three', 'eighteen_three', 'nineteen_three1', 'nineteen_three2', 'sixteen_three','three_eight'],
+  'five': ['fifteen_five', 'eighteen_five', 'nineteen_five', 'five_five','three_five1','three_five2', 'sixteen_three'],
+  'eight': ['eight_eight', 'eight_ten', 'eight_seventeen', 'fifteen_eight', 'eighteen_eight', 'nineteen_eight','three_eight','eight_sixteen'],
+  'ten': ['eight_ten', 'fifteen_ten','ten_nineteen','ten_ten','ten_twelve'],
+  'twelve': ['diminishedTrichord','one_three','thirteen_fifteen', 'nineteen_twentyOne', 'ten_twelve'], 
+  'thirteen': ['diminishedTrichord','one_three','thirteen_fifteen', 'nineteen_twentyOne', 'ten_twelve'],
+  'fifteen': ['thirteen_fifteen', 'fifteen_fifteen', 'fifteen_five', 'fifteen_eight', 'fifteen_nineteen1', 'fifteen_nineteen2', 'fifteen_nineteen3', 'fifteen_sixteen', 'fifteen_ten', 'fifteen_three1', 'fifteen_three2'],
+  'sixteen': ['fifteen_sixteen','sixteen_sixteen','sixteen_three','sixteen_five','sixteen_eighteen','eight_sixteen',],
+  'seventeen': ['sixteen_seventeen','eight_seventeen','seventeen_seventeen','seventeen_eighteen'],
+  'eighteen': ['eighteen_eight', 'eighteen_eighteen', 'eighteen_five', 'eighteen_nineteen', 'eighteen_three', 'seventeen_seventeen','eighteen_eighteen','seventeen_eighteen'],
+  'nineteen': ['eighteen_nineteen', 'fifteen_nineteen1', 'fifteen_nineteen2', 'fifteen_nineteen3', 'nineteen_eight', 'nineteen_five', 'nineteen_nineteen', 'nineteen_three1', 'nineteen_three2', 'nineteen_twentOne','ten_nineteen'],
+  'twentyOne': ['diminishedTrichord','one_three','thirteen_fifteen', 'nineteen_twentyOne', 'ten_twelve']
 };
 
 // Trichord display priorities - determines which trichord to show first when multiple are available
 export const trichordPriorities = {
   'one_three': 1,
   'thirteen_fifteen': 1,
-  'diminishedTrichord': 2
+  'diminishedTrichord': 2,
+  'fifteen_nineteen1': 1,
+  'fifteen_nineteen2': 2,
+  'fifteen_nineteen3': 3
 };
