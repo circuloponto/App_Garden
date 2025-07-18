@@ -142,7 +142,7 @@ const InfoBox = ({ selectedRoot, selectedChords, chordTypes, chordRootOffsets, o
   const [selectedOffsetIndex, setSelectedOffsetIndex] = useState(-1);
   const [scaleNotes, setScaleNotes] = useState([]);
   const [scaleType, setScaleType] = useState('chromatic'); // Default to chromatic scale
-  const [isFretboardVisible, setIsFretboardVisible] = useState(true); // State to track fretboard visibility
+  const [isFretboardVisible, setIsFretboardVisible] = useState(false); // State to track fretboard visibility - collapsed by default
   const notesContainerRef = useRef(null);
 
   useEffect(() => {

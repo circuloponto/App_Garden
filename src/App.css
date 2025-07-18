@@ -1348,9 +1348,8 @@ transform-origin: bottom;
 
   .infoBox{
     width: 420px;
-    overflow: hidden;
-    height: auto;
-    min-height: 240px;
+    height: 700px; /* Fixed height - increased by 50px */
+    max-height: 700px; /* Ensure it doesn't grow beyond this */
     border: 2px solid white;
     border-radius: 40px;
     z-index: 100;
@@ -1366,12 +1365,18 @@ transform-origin: bottom;
     top: 60%; /* Center vertically */
     transform: translateY(-50%); /* Center vertically */
     contain: layout;
-    overflow: hidden;
+    overflow-y: scroll; /* Enable vertical scrolling */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
     min-width: 400px;
-    min-height: 650px;
     pointer-events: auto; /* Ensure it's clickable */
     transition: all 0.5s ease;
-}
+  }
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .infoBox::-webkit-scrollbar {
+    display: none;
+  }
 
   .infoBox.hidden {
     transform: translate(calc(100% + 60px), -50%);
@@ -1478,8 +1483,22 @@ transform-origin: bottom;
   
   .fretboard-content {
     max-height: 500px;
-    overflow: hidden;
-    transition: max-height 0.3s ease-in-out;
+    overflow: scroll;
+    transition: all 0.3s ease-in-out;
+    position: absolute;
+    width: calc(100% - 40px); /* Account for padding */
+    left: 20px; /* Align with parent padding */
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 100;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .fretboard-content::-webkit-scrollbar {
+    display: none;
   }
   
   .fretboard-content.collapsed {
