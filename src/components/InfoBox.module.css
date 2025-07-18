@@ -1,0 +1,56 @@
+.scaleTabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+ /*  padding: 5px; */
+}
+
+.scaleTab {
+  /* padding: 12px 18px; */
+  margin: 0 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  min-width: 90px;
+  min-height: 90px;
+  box-shadow: none !important;
+}
+
+.scaleTab:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.scaleTab.active {
+  background-color: rgba(255, 255, 255, 0.25);
+ /*  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); */
+}
+
+.trichordSvgContainer {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: none !important;
+  box-shadow: none !important;
+}
+
+.trichordSvg,
+.trichordSvg svg,
+.trichordSvg path,
+.trichordSvg g,
+.trichordSvgContainer * {
+  filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  -webkit-filter: none !important;
+  -moz-filter: none !important;
+  -o-filter: none !important;
+  -ms-filter: none !important;
+}

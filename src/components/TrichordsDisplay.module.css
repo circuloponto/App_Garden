@@ -1,7 +1,7 @@
 .trichordsContainer {
   position: absolute;
   right: -450px; /* Move closer to the main content */
-  top: 44%;
+  top: 30%; /* Moved higher in the window */
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
@@ -12,25 +12,11 @@
   padding: 8px;
   border-radius: 10px;
   width: 160px; /* Reduce width for smaller trichords */
-  max-height: 80vh; /* Limit height to 80% of viewport height */
-  overflow-y: auto; /* Enable vertical scrolling */
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent; /* Firefox */
+  max-height: none; /* Remove height limit */
+  overflow-y: visible; /* Disable vertical scrolling */
 }
 
-/* Webkit scrollbar styling */
-.trichordsContainer::-webkit-scrollbar {
-  width: 6px;
-}
-
-.trichordsContainer::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.trichordsContainer::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
-}
+/* No scrollbar styling needed */
 
 .trichordPair {
   display: flex;
@@ -57,12 +43,7 @@
   flex: 1;
 }
 
-.trichordWrapper:hover,
-.trichordWrapper.hovered {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-  background-color: rgba(0, 0, 0, 0.8);
-}
+/* Hover effects removed */
 
 .trichordSvg {
   width: 100%;

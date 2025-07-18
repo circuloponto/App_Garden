@@ -62,7 +62,7 @@ function App() {
   const [fretboardOrientation, setFretboardOrientation] = useState('vertical'); // 'vertical' or 'horizontal'
   const [firstChordColor, setFirstChordColor] = useState('#f08c00'); // Orange
   const [secondChordColor, setSecondChordColor] = useState('#00e1ff'); // Blue
-  const [electronColor, setElectronColor] = useState('#ffffff'); // White (default)
+  const [electronColor, setElectronColor] = useState('#9c36b5'); // Purple (default)
   
   // Update CSS variables when colors change
   // Using useLayoutEffect for synchronous DOM updates before browser paint

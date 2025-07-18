@@ -59,7 +59,6 @@ const Diagram = ({
                 isVisible={true}
                 selectedChords={selectedChords}
                 hoveredChord={hoveredChord}
-                onTrichordHover={(trichordId) => console.log('Trichord hovered:', trichordId)}
                 trichordMappings={trichordMappings}
                 trichordPriorities={trichordPriorities}
                 trichordColor={trichordColor}
