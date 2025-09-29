@@ -9,8 +9,9 @@ import FretboardNavButton from './FretboardNavButton'
 import SvgComponent from './SvgComponent'
 import styles from './InfoBox.module.css'
 
-// Import trichord mappings
+// Import trichord mappings and utility
 import { trichordMappings } from '../data/connections.js'
+import { getVisibleTrichordTypes } from '../utils/trichordUtils.js'
 
 // Import all unified trichord SVGs directly (same as in TrichordsDisplay)
 // Eight trichords
@@ -24,6 +25,7 @@ import trichord_sixteen_five from '../assets/SVGs/trichordsUnity/trichord_sixtee
 import trichord_sixteen_sixteen from '../assets/SVGs/trichordsUnity/trichord_sixteen_sixteen.svg'
 import trichord_sixteen_eighteen from '../assets/SVGs/trichordsUnity/trichord_sixteen_eighteen.svg'
 import trichord_sixteen_seventeen from '../assets/SVGs/trichordsUnity/trichord_sixteen_seventeen.svg'
+import trichord_sixteen_eight from '../assets/SVGs/trichordsUnity/trichord_sixteen_eight.svg'
 import trichord_seventeen_seventeen from '../assets/SVGs/trichordsUnity/trichord_seventeen_seventeen.svg'
 import trichord_seventeen_eighteen from '../assets/SVGs/trichordsUnity/trichord_seventeen_eighteen.svg'
 import trichord_three_five1 from '../assets/SVGs/trichordsUnity/trichord_three_five1.svg'
@@ -384,40 +386,65 @@ const InfoBox = ({ selectedRoot, selectedChords, chordTypes, chordRootOffsets, o
     setIsPlaying(!isPlaying);
   };
 
-  // Direct mapping from chord numbers to imported SVG files
-  const chordNumberToTrichordSvg = {
-    'one': trichord_one_three,
-    'three': trichord_three_five1,
-    'five': trichord_fifteen_five, // Using fifteen_five as a representative for five
-    'eight': trichord_eight_eight,
-    'ten': trichord_ten_ten,
-    'twelve': trichord_ten_twelve,
-    'thirteen': trichord_thirteen_fifteen,
-    'fifteen': trichord_fifteen_fifteen,
-    'sixteen': trichord_sixteen_sixteen,
-    'seventeen': trichord_seventeen_seventeen,
-    'eighteen': trichord_eighteen_eighteen,
-    'nineteen': trichord_fifteen_nineteen1, // Using fifteen_nineteen1 as a representative
-    'twentyOne': trichord_diminishedTrichord
+  // Comprehensive mapping of trichord types to their SVG imports (same as TrichordsDisplay)
+  const trichordSvgs = {
+    'eight_eight': trichord_eight_eight,
+    'eight_seventeen': trichord_eight_seventeen,
+    'eight_ten': trichord_eight_ten,
+    'three_eight': trichord_three_eight,
+    'one_three': trichord_one_three,
+    'sixteen_three': trichord_sixteen_three,
+    'sixteen_five': trichord_sixteen_five,
+    'sixteen_sixteen': trichord_sixteen_sixteen,
+    'sixteen_eighteen': trichord_sixteen_eighteen,
+    'sixteen_seventeen': trichord_sixteen_seventeen,
+    'sixteen_eight': trichord_sixteen_eight,
+    'seventeen_seventeen': trichord_seventeen_seventeen,
+    'seventeen_eighteen': trichord_seventeen_eighteen,
+    'three_five1': trichord_three_five1,
+    'three_five2': trichord_three_five2,
+    'three_three': trichord_three_three,
+    'ten_ten': trichord_ten_ten,
+    'ten_twelve': trichord_ten_twelve,
+    'ten_nineteen': trichord_ten_nineteen1,
+    'eighteen_eight': trichord_eighteen_eight,
+    'eighteen_eighteen': trichord_eighteen_eighteen,
+    'eighteen_five': trichord_eighteen_five,
+    'eighteen_nineteen': trichord_eighteen_nineteen,
+    'eighteen_three': trichord_eighteen_three,
+    'fifteen_eight': trichord_fifteen_eight,
+    'fifteen_fifteen': trichord_fifteen_fifteen,
+    'fifteen_five': trichord_fifteen_five,
+    'fifteen_nineteen1': trichord_fifteen_nineteen1,
+    'fifteen_nineteen2': trichord_fifteen_nineteen2,
+    'fifteen_nineteen3': trichord_fifteen_nineteen3,
+    'fifteen_sixteen': trichord_fifteen_sixteen,
+    'fifteen_ten': trichord_fifteen_ten1,
+    'fifteen_three1': trichord_fifteen_three1,
+    'fifteen_three2': trichord_fifteen_three2,
+    'five_five': trichord_five_five,
+    'nineteen_eight': trichord_nineteen_eight,
+    'nineteen_five': trichord_nineteen_five,
+    'nineteen_nineteen': trichord_nineteen_nineteen,
+    'nineteen_three1': trichord_nineteen_three1,
+    'nineteen_three2': trichord_nineteen_three2,
+    'nineteen_twentyOne': trichord_nineteen_twentyOne,
+    'thirteen_fifteen': trichord_thirteen_fifteen,
+    'one_one': trichord_one_one,
+    'twelve_twelve': trichord_twelve_twelve,
+    'thirteen_thirteen': trichord_thirteen_thirteen,
+    'diminishedTrichord': trichord_diminishedTrichord,
+    'twentyOne_twentyOne': trichord_twentyOne_twentyOne
   };
   
-  // Function to get the correct trichord SVG for a chord class
-  const getTrichordSvgForChord = (chordClassName) => {
-    // Extract the chord number from the chord class name
-    const chordType = findChordTypeByClassName(chordTypes, chordClassName);
-    if (!chordType) {
-      console.warn(`Could not find chord type for class name: ${chordClassName}`);
-      return trichord_one_three; // Default fallback
-    }
-    
-    const chordNumber = chordType.id;
-    console.log(`Chord ${chordClassName} has number: ${chordNumber}`);
-    
-    // Get the trichord SVG for this chord number
-    const svgFile = chordNumberToTrichordSvg[chordNumber] || trichord_one_three;
-    console.log(`Using trichord SVG for chord ${chordClassName}`);
-    
-    return svgFile;
+  // Function to get trichord SVG for a specific trichord type
+  const getTrichordSvg = (trichordType) => {
+    return trichordSvgs[trichordType] || trichord_one_three; // Default fallback
+  };
+  
+  // Get the filtered trichord types that should be displayed
+  const getVisibleTrichords = () => {
+    return getVisibleTrichordTypes(selectedChords);
   };
 
   // Function to handle tab click
@@ -499,48 +526,45 @@ const InfoBox = ({ selectedRoot, selectedChords, chordTypes, chordRootOffsets, o
 
   return (
     <div className={`infoBox ${selectedChords.length === 2 ? '' : 'hidden'}`}>
-        {/* Scale tabs - now at the very top */}
-        {availableOffsets.length > 1 && (
-          <div className={styles.scaleTabs}>
-            {console.log('Available offsets:', availableOffsets)}
-            {console.log('Selected chords:', selectedChords)}
-            {availableOffsets.map((offset, index) => {
-              // Get the chord class name for this tab
-              const chordClassName = selectedChords[index % selectedChords.length];
-              console.log(`Tab ${index}: Using chord class ${chordClassName}`);
-              
-              // Get the trichord SVG for this chord
-              const svgUrl = getTrichordSvgForChord(chordClassName);
-              console.log(`Tab ${index}: Using trichord SVG: ${svgUrl}`);
-              
-              return (
-                <div 
-                  key={index} 
-                  className={`${styles.scaleTab} ${selectedOffsetIndex === index ? styles.active : ''}`}
-                  onClick={(e) => handleTabClick(e, index)}
-                >
-                  {svgUrl ? (
-                    <div 
-                      className={styles.trichordSvgContainer} 
-                      style={{ filter: 'none !important', boxShadow: 'none !important' }}
-                    >
-                        <SvgComponent 
-                          src={svgUrl} 
-                          className={`${styles.trichordSvg} trichord`}
-                          trichordColor={index === 0 ? firstChordColor : secondChordColor}
-                          electronColor={electronColor}
-                          alt={`Trichord for ${chordClassName}`}
-                          style={{ filter: 'none !important', boxShadow: 'none !important' }}
-                        />
-                    </div>
-                  ) : (
-                    <span>Scale {index + 1}</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {/* Trichords section - always at the top when chords are selected */}
+        {selectedChords && selectedChords.length > 0 && (() => {
+          const visibleTrichords = getVisibleTrichords();
+          console.log('InfoBox visible trichords:', visibleTrichords);
+          
+          return visibleTrichords.length > 0 && (
+            <div className={styles.scaleTabs}>
+              {visibleTrichords.map((trichordType, index) => {
+                const svgUrl = getTrichordSvg(trichordType);
+                
+                return (
+                  <div 
+                    key={trichordType} 
+                    className={`${styles.scaleTab} ${index === 0 ? styles.active : ''}`}
+                    title={`Trichord: ${trichordType}`}
+                  >
+                    {svgUrl ? (
+                      <div 
+                        className={styles.trichordSvgContainer} 
+                        style={{ filter: 'none !important', boxShadow: 'none !important' }}
+                      >
+                          <SvgComponent 
+                            src={svgUrl} 
+                            className={`${styles.trichordSvg} trichord`}
+                            trichordColor={index === 0 ? firstChordColor : secondChordColor}
+                            electronColor={electronColor}
+                            alt={`Trichord ${trichordType}`}
+                            style={{ filter: 'none !important', boxShadow: 'none !important' }}
+                          />
+                      </div>
+                    ) : (
+                      <span>{trichordType}</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
         
         {/* Header section */}
         <div className="infoTitle">

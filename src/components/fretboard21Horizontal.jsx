@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './fretboard21Horizontal.module.css'
 import classNames from 'classnames'
 
-const Fretboard21Horizontal = ({chord, firstChordColor = '#f08c00', secondChordColor = '#00e1ff'}) => {
+const Fretboard21Horizontal = ({chord, firstChordColor = '#f08c00', secondChordColor = '#00e1ff', flipStrings = false, scalePattern = null, showAllScale = false, clearAll = false, arpeggioData = null}) => {
   // Define CSS variables for chord colors
   const cssVars = {
     '--first-chord-color': firstChordColor,
@@ -54,6 +54,49 @@ const Fretboard21Horizontal = ({chord, firstChordColor = '#f08c00', secondChordC
     return chord.secondChordNotes.includes(note)
   }
 
+  // Check if a position is in the current scale pattern
+  const isInScalePattern = (stringIndex, fretIndex) => {
+    if (!scalePattern || !scalePattern.notes) return false
+    return scalePattern.notes.some(pos => pos.string === stringIndex && pos.fret === fretIndex)
+  }
+
+  // Check if a position is in the all scale notes
+  const isInAllScale = (stringIndex, fretIndex) => {
+    if (!showAllScale || !chord?.allScaleNotes) return false
+    return chord.allScaleNotes.some(pos => pos.string === stringIndex && pos.fret === fretIndex)
+  }
+
+  // Check if a position is a root note in scale pattern
+  const isRootInPattern = (stringIndex, fretIndex) => {
+    if (!scalePattern || !scalePattern.notes) return false
+    const patternNote = scalePattern.notes.find(pos => pos.string === stringIndex && pos.fret === fretIndex)
+    return patternNote && patternNote.isRoot
+  }
+
+  // Check if a position is in the current arpeggio
+  const isInArpeggio = (stringIndex, fretIndex) => {
+    if (!arpeggioData || !arpeggioData.positions) return false
+    return arpeggioData.positions.some(pos => pos.string === stringIndex && pos.fret === fretIndex)
+  }
+
+  // Check if a position is currently being played in the arpeggio sequence
+  const isCurrentArpeggioNote = (stringIndex, fretIndex) => {
+    if (!arpeggioData || !arpeggioData.isPlaying || arpeggioData.currentStep < 0) return false
+    
+    const currentStepPositions = arpeggioData.positions.filter(pos => 
+      pos.arpeggioNoteIndex === arpeggioData.currentStep
+    )
+    
+    return currentStepPositions.some(pos => pos.string === stringIndex && pos.fret === fretIndex)
+  }
+
+  // Check if a position is an arpeggio root note
+  const isArpeggioRoot = (stringIndex, fretIndex) => {
+    if (!arpeggioData || !arpeggioData.positions) return false
+    const arpeggioNote = arpeggioData.positions.find(pos => pos.string === stringIndex && pos.fret === fretIndex)
+    return arpeggioNote && arpeggioNote.isArpeggioRoot
+  }
+
   // Check if a note is the root note of the chord
   const isRootNote = (note, root) => {
     if (!root) return false
@@ -67,8 +110,8 @@ const Fretboard21Horizontal = ({chord, firstChordColor = '#f08c00', secondChordC
     return note === root
   }
 
-  // Special fret markers (typically at frets 3, 5, 7, 9, 12, 15, 17, 19, 21)
-  const specialFrets = [3, 5, 7, 9, 12, 15, 17, 19, 21]
+  // Special fret markers (standard guitar fret markers)
+  const specialFrets = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
 
   return (
     <div 
@@ -85,7 +128,7 @@ const Fretboard21Horizontal = ({chord, firstChordColor = '#f08c00', secondChordC
           <div 
             key={`string-${stringIndex}`}
             className={styles.stringLine}
-            style={{ top: `${stringIndex * 26 + 13}px` }}
+            style={{ top: `${(flipStrings ? (strings.length - 1 - stringIndex) : stringIndex) * 26 + 13}px` }}
           />
         ))}
         
@@ -111,17 +154,105 @@ const Fretboard21Horizontal = ({chord, firstChordColor = '#f08c00', secondChordC
             const isPositionInChord = chord && chord.positions && 
               chord.positions.some(pos => pos.string === 6-stringIndex && pos.fret === fretIndex)
             
-            // Determine note color based on chord membership
+            // Check scale pattern conditions
+            const inScalePattern = isInScalePattern(stringIndex, fretIndex)
+            const inAllScale = showAllScale && isInAllScale(stringIndex, fretIndex) // Only check if showAllScale is true
+            const isPatternRoot = isRootInPattern(stringIndex, fretIndex)
+            
+            // Check arpeggio conditions
+            const inArpeggio = isInArpeggio(stringIndex, fretIndex)
+            const isCurrentlyPlaying = isCurrentArpeggioNote(stringIndex, fretIndex)
+            const isArpRoot = isArpeggioRoot(stringIndex, fretIndex)
+            
+            // Determine what to show based on mode
+            let shouldShow = false
             let noteStyle = {}
-            if (isInFirstChord && !isInSecondChord) {
-              noteStyle = { backgroundColor: firstChordColor }
-            } else if (isInSecondChord && !isInFirstChord) {
-              noteStyle = { backgroundColor: secondChordColor }
-            } else if (isInFirstChord && isInSecondChord) {
-              // For notes in both chords, use a gradient
-              noteStyle = { 
-                background: `linear-gradient(135deg, ${firstChordColor} 0%, ${firstChordColor} 49%, ${secondChordColor} 51%, ${secondChordColor} 100%)` 
+            let noteClass = styles.note
+            
+            if (clearAll) {
+              // Clear all mode - show nothing
+              shouldShow = false
+            } else if (arpeggioData) {
+              // Arpeggio mode - ONLY show arpeggio notes, hide everything else
+              if (inArpeggio) {
+                shouldShow = true
+                if (isCurrentlyPlaying) {
+                  // Currently playing note - bright highlight with pulse
+                  noteStyle = { 
+                    backgroundColor: '#ffff00', // Bright yellow for current note
+                    border: '3px solid #ff0000',
+                    boxShadow: '0 0 15px #ffff00',
+                    animation: 'pulse 0.5s infinite'
+                  }
+                  noteClass = classNames(styles.note, styles.arpeggioNote, styles.currentNote)
+                } else if (isArpRoot) {
+                  // Arpeggio root note
+                  noteStyle = { 
+                    backgroundColor: '#ff6b6b',
+                    border: '3px solid #ffffff'
+                  }
+                  noteClass = classNames(styles.note, styles.arpeggioNote, styles.arpeggioRoot)
+                } else {
+                  // Regular arpeggio note
+                  noteStyle = { 
+                    backgroundColor: '#4ecdc4',
+                    border: '2px solid #333333'
+                  }
+                  noteClass = classNames(styles.note, styles.arpeggioNote)
+                }
+              } else {
+                // When arpeggio is active, hide all non-arpeggio notes
+                shouldShow = false
               }
+            } else if (scalePattern && inScalePattern) {
+              // Scale pattern mode - show only pattern notes (when no arpeggio active)
+              shouldShow = true
+              noteStyle = { 
+                backgroundColor: isPatternRoot ? firstChordColor : secondChordColor,
+                border: isPatternRoot ? '3px solid #ffffff' : '2px solid #333333'
+              }
+              noteClass = classNames(styles.note, styles.scaleNote, isPatternRoot && styles.rootNote)
+            } else if (showAllScale && inAllScale) {
+              // Show all scale mode - show all scale notes
+              shouldShow = true
+              noteStyle = { 
+                backgroundColor: firstChordColor,
+                border: '2px solid #333333'
+              }
+              noteClass = classNames(styles.note, styles.scaleNote)
+            } else if (showAllScale && (isInFirstChord || isInSecondChord)) {
+              // Show all chord notes when in show all scale mode
+              shouldShow = true
+              if (isInFirstChord && !isInSecondChord) {
+                noteStyle = { backgroundColor: firstChordColor }
+                noteClass = classNames(styles.note, styles.inChord, isRoot && styles.rootNote)
+              } else if (isInSecondChord && !isInFirstChord) {
+                noteStyle = { backgroundColor: secondChordColor }
+                noteClass = classNames(styles.note, styles.inChord, isRoot && styles.rootNote)
+              } else if (isInFirstChord && isInSecondChord) {
+                noteStyle = { 
+                  background: `linear-gradient(135deg, ${firstChordColor} 0%, ${firstChordColor} 49%, ${secondChordColor} 51%, ${secondChordColor} 100%)` 
+                }
+                noteClass = classNames(styles.note, styles.inChord, isRoot && styles.rootNote)
+              }
+            } else if (!scalePattern && !showAllScale) {
+              // Default chord mode - only show chord notes, not scale notes
+              if (isInFirstChord && !isInSecondChord) {
+                shouldShow = true
+                noteStyle = { backgroundColor: firstChordColor }
+                noteClass = classNames(styles.note, styles.inChord, isRoot && styles.rootNote)
+              } else if (isInSecondChord && !isInFirstChord) {
+                shouldShow = true
+                noteStyle = { backgroundColor: secondChordColor }
+                noteClass = classNames(styles.note, styles.inChord, isRoot && styles.rootNote)
+              } else if (isInFirstChord && isInSecondChord) {
+                shouldShow = true
+                noteStyle = { 
+                  background: `linear-gradient(135deg, ${firstChordColor} 0%, ${firstChordColor} 49%, ${secondChordColor} 51%, ${secondChordColor} 100%)` 
+                }
+                noteClass = classNames(styles.note, styles.inChord, isRoot && styles.rootNote)
+              }
+              // Explicitly don't show anything else in default mode
             }
             
             return (
@@ -129,17 +260,14 @@ const Fretboard21Horizontal = ({chord, firstChordColor = '#f08c00', secondChordC
                 key={`note-${stringIndex}-${fretIndex}`}
                 className={styles.cell}
                 style={{ 
-                  gridRow: stringIndex + 1,
-                  gridColumn: fretIndex + 1
+                  gridRow: (flipStrings ? (strings.length - stringIndex) : (stringIndex + 1)),
+                  gridColumn: fretIndex + 1,
+                  transform: 'translateX(13px) translateY(13px)' // Move right to center between frets, down to sit on correct string line
                 }}
               >
-                {(isInFirstChord || isInSecondChord) && (
+                {shouldShow && (
                   <div 
-                    className={classNames(
-                      styles.note,
-                      styles.inChord,
-                      isRoot && styles.rootNote
-                    )}
+                    className={noteClass}
                     style={noteStyle}
                   >
                     {note.includes('/') ? note.split('/')[0] : note}

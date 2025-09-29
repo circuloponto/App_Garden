@@ -16,6 +16,7 @@ import trichord_sixteen_five from '../assets/SVGs/trichordsUnity/trichord_sixtee
 import trichord_sixteen_sixteen from '../assets/SVGs/trichordsUnity/trichord_sixteen_sixteen.svg';
 import trichord_sixteen_eighteen from '../assets/SVGs/trichordsUnity/trichord_sixteen_eighteen.svg';
 import trichord_sixteen_seventeen from '../assets/SVGs/trichordsUnity/trichord_sixteen_seventeen.svg';
+import trichord_sixteen_eight from '../assets/SVGs/trichordsUnity/trichord_sixteen_eight.svg';
 import trichord_seventeen_seventeen from '../assets/SVGs/trichordsUnity/trichord_seventeen_seventeen.svg';
 import trichord_seventeen_eighteen from '../assets/SVGs/trichordsUnity/trichord_seventeen_eighteen.svg';
 import trichord_three_five1 from '../assets/SVGs/trichordsUnity/trichord_three_five1.svg';
@@ -77,6 +78,7 @@ const trichordSvgs = {
   'sixteen_sixteen': trichord_sixteen_sixteen,
   'sixteen_eighteen': trichord_sixteen_eighteen,
   'sixteen_seventeen': trichord_sixteen_seventeen,
+  'sixteen_eight': trichord_sixteen_eight,
   'seventeen_seventeen': trichord_seventeen_seventeen,
   'seventeen_eighteen': trichord_seventeen_eighteen,
   'three_five1': trichord_three_five1,

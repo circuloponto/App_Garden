@@ -29,20 +29,146 @@
   color: #f0f0f0;
 }
 
-/* Orientation toggle button */
-.orientationButton {
+/* Controls container */
+.controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin: 10px 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Button base styles */
+.orientationButton,
+.patternButton,
+.clearButton,
+.arpeggioButton,
+.playButton {
   padding: 10px 20px;
-  background-color: #f08c00;
   color: white;
   border: none;
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+/* Orientation toggle button */
+.orientationButton {
+  background-color: #f08c00;
 }
 
 .orientationButton:hover {
   background-color: #ff9d1a;
+}
+
+/* Pattern cycle button */
+.patternButton {
+  background-color: #28a745;
+}
+
+.patternButton:hover:not(:disabled) {
+  background-color: #34ce57;
+}
+
+.patternButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Clear all button */
+.clearButton {
+  background-color: #dc3545;
+}
+
+.clearButton:hover {
+  background-color: #c82333;
+}
+
+.clearButton.active {
+  background-color: #bd2130;
+}
+
+.clearButton.active:hover {
+  background-color: #a71e2a;
+}
+
+/* Arpeggio button */
+.arpeggioButton {
+  background-color: #6f42c1;
+}
+
+.arpeggioButton:hover:not(:disabled) {
+  background-color: #5a32a3;
+}
+
+.arpeggioButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Play button */
+.playButton {
+  background-color: #20c997;
+}
+
+.playButton:hover:not(:disabled) {
+  background-color: #1ba085;
+}
+
+.playButton:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.playButton.playing {
+  background-color: #fd7e14;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Arpeggio info display */
+.arpeggioInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: rgba(111, 66, 193, 0.2);
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.arpeggioInfo span {
+  color: #f0f0f0;
+}
+
+/* Pattern info display */
+.patternInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.patternInfo span {
+  color: #f0f0f0;
 }
 
 /* Container for the fretboard displayer */

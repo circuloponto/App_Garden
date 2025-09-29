@@ -25,6 +25,7 @@
     position: relative;
     margin: 0 auto;
     margin-top: 10px;
+    overflow: visible; /* Allow notes to extend beyond grid */
 }
 
 /* String lines (horizontal) */
@@ -83,6 +84,39 @@
 /* Root note styling */
 .rootNote {
     border: 2px solid red;
+}
+
+/* Scale note styling */
+.scaleNote {
+    color: black;
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Arpeggio note styling */
+.arpeggioNote {
+    color: black;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+}
+
+.arpeggioRoot {
+    border: 3px solid #ffffff !important;
+}
+
+.currentNote {
+    animation: arpeggioGlow 0.5s infinite alternate;
+}
+
+@keyframes arpeggioGlow {
+    0% { 
+        box-shadow: 0 0 15px #ffff00;
+        transform: scale(1);
+    }
+    100% { 
+        box-shadow: 0 0 25px #ffff00;
+        transform: scale(1.1);
+    }
 }
 
 /* Fret numbers row */

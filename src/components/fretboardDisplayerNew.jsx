@@ -3,7 +3,7 @@ import styles from './fretboardDisplayerNew.module.css'
 import Fretboard21Horizontal from './fretboard21Horizontal'
 import Fretboard21Vertical from './fretboard21Vertical'
 
-const FretboardDisplayerNew = ({firstChord, secondChord, orientation = 'vertical', firstChordColor = '#f08c00', secondChordColor = '#00e1ff'}) => {
+const FretboardDisplayerNew = ({firstChord, secondChord, orientation = 'vertical', firstChordColor = '#f08c00', secondChordColor = '#00e1ff', flipStrings = false, scalePattern = null, showAllScale = false, allScaleNotes = [], clearAll = false, arpeggioData = null}) => {
   // Use different components based on orientation
   const FretboardComponent = orientation === 'vertical' 
     ? Fretboard21Vertical 
@@ -21,7 +21,8 @@ const FretboardDisplayerNew = ({firstChord, secondChord, orientation = 'vertical
     ],
     // Pass both chord spellings separately for coloring
     firstChordNotes: firstChord?.spelling || [],
-    secondChordNotes: secondChord?.spelling || []
+    secondChordNotes: secondChord?.spelling || [],
+    allScaleNotes: allScaleNotes
   }
 
   return (
@@ -30,6 +31,11 @@ const FretboardDisplayerNew = ({firstChord, secondChord, orientation = 'vertical
         chord={combinedChord}
         firstChordColor={firstChordColor}
         secondChordColor={secondChordColor}
+        flipStrings={flipStrings}
+        scalePattern={scalePattern}
+        showAllScale={showAllScale}
+        clearAll={clearAll}
+        arpeggioData={arpeggioData}
       />
     </div>
   )
