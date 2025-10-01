@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './fretboard21Vertical.module.css'
 import classNames from 'classnames'
 
-const Fretboard21Vertical = ({chord, firstChordColor = '#f08c00', secondChordColor = '#00e1ff', flipStrings = false, scalePattern = null, showAllScale = false, clearAll = false, arpeggioData = null}) => {
+const Fretboard21Vertical = ({chord, firstChordColor = '#f08c00', secondChordColor = '#00e1ff', flipStrings = false, scalePattern = null, showAllScale = false, clearAll = false, arpeggioData = null, selectedStringSet = null}) => {
   // Define CSS variables for chord colors
   const cssVars = {
     '--first-chord-color': firstChordColor,
@@ -145,8 +145,12 @@ const Fretboard21Vertical = ({chord, firstChordColor = '#f08c00', secondChordCol
         ))}
         
         {/* Notes */}
-        {strings.map((_, stringIndex) => (
-          [...Array(22)].map((_, fretIndex) => {
+        {strings.map((_, stringIndex) => {
+          // Check if this string should be shown based on selected string set
+          const shouldShowString = !selectedStringSet || 
+            selectedStringSet.strings.includes(stringIndex);
+          
+          return [...Array(22)].map((_, fretIndex) => {
             const note = notes[stringIndex][fretIndex]
             const isInFirstChord = isNoteInFirstChord(note)
             const isInSecondChord = isNoteInSecondChord(note)
@@ -255,6 +259,11 @@ const Fretboard21Vertical = ({chord, firstChordColor = '#f08c00', secondChordCol
               // Explicitly don't show anything else in default mode
             }
             
+            // Apply string set filter - only show notes on selected strings
+            if (!shouldShowString) {
+              shouldShow = false;
+            }
+            
             return (
               <div 
                 key={`note-${stringIndex}-${fretIndex}`}
@@ -275,14 +284,13 @@ const Fretboard21Vertical = ({chord, firstChordColor = '#f08c00', secondChordCol
                 )}
               </div>
             )
-          })
-        ))}
+          });
+        })}
         
         {/* Fret numbers */}
         <div className={styles.fretNumbersRow}>
           {[...Array(22)].map((_, fretIndex) => (
             <div 
-              key={`fretNum-${fretIndex}`}
               className={styles.fretNumberCell}
               style={{
                 gridColumn: fretIndex + 1,

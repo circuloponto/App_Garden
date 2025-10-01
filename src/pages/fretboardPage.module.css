@@ -44,7 +44,8 @@
 .patternButton,
 .clearButton,
 .arpeggioButton,
-.playButton {
+.playButton,
+.stringSetSelect {
   padding: 10px 20px;
   color: white;
   border: none;
@@ -412,4 +413,85 @@
 /* Horizontal orientation - normal */
 .horizontal {
   transform: none;
+}
+
+/* Scale Display */
+.scaleDisplay {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 15px 0;
+  padding: 12px 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scaleLabel {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #f0f0f0;
+  min-width: 50px;
+}
+
+.scaleNotes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.scaleNote {
+  padding: 6px 12px;
+  background-color: #4a4a4a;
+  color: white;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  border: 1px solid #666;
+  transition: all 0.2s ease;
+}
+
+.scaleNote:hover {
+  background-color: #5a5a5a;
+  transform: translateY(-1px);
+}
+
+/* Arpeggio highlighting in scale display */
+.arpeggioNote {
+  background-color: #4ecdc4 !important; /* Teal for arpeggio notes */
+  border-color: #3bb5b0 !important;
+  color: black !important;
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(78, 205, 196, 0.5);
+}
+
+.arpeggioRootNote {
+  background-color: #ff6b6b !important; /* Red for arpeggio root */
+  border-color: #ff5252 !important;
+  color: white !important;
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
+}
+
+/* String Set Dropdown */
+.stringSetSelect {
+  background-color: #8e44ad;
+  min-width: 180px;
+}
+
+.stringSetSelect:hover {
+  background-color: #9b59b6;
+  transform: translateY(-2px);
+}
+
+.stringSetSelect:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.stringSetSelect option {
+  background-color: #2c3e50;
+  color: white;
+  padding: 8px;
 }

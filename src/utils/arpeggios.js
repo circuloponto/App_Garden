@@ -45,35 +45,86 @@ const getArpeggioName = (arpeggioNotes, rootNote, degree) => {
   return `${rootNote} ${romanNumeral} (${arpeggioNotes.join('-')})`;
 };
 
-// Find arpeggio notes within a specific scale pattern
-export const findArpeggioInPattern = (arpeggio, scalePattern) => {
+// Find arpeggio notes within a specific scale pattern - linearly ascending sequence
+export const findArpeggioInPattern = (arpeggio, scalePattern, minRootPosition = null) => {
   if (!arpeggio || !scalePattern || !scalePattern.notes) return [];
   
-  const arpeggioPositions = [];
+  // Find all root positions in the pattern
+  const rootPositions = scalePattern.notes.filter(patternNote => 
+    areNotesEquivalent(patternNote.note, arpeggio.rootNote)
+  );
   
-  // For each note in the arpeggio, find all positions in the current pattern
-  arpeggio.notes.forEach((arpeggioNote, noteIndex) => {
-    const positions = scalePattern.notes.filter(patternNote => {
-      return areNotesEquivalent(patternNote.note, arpeggioNote);
-    });
-    
-    positions.forEach(position => {
-      arpeggioPositions.push({
-        ...position,
-        arpeggioNoteIndex: noteIndex,
-        arpeggioNote: arpeggioNote,
-        isArpeggioRoot: noteIndex === 0
-      });
-    });
-  });
+  if (rootPositions.length === 0) return [];
   
-  // Sort by string and fret for logical playing order
-  arpeggioPositions.sort((a, b) => {
+  // Sort root positions by linear order (string first, then fret)
+  rootPositions.sort((a, b) => {
     if (a.string !== b.string) return a.string - b.string;
     return a.fret - b.fret;
   });
   
-  return arpeggioPositions;
+  // Find the appropriate root position based on minimum position
+  let selectedRoot = rootPositions[0]; // Default to first root
+  
+  if (minRootPosition) {
+    // Find the first root that's at or after the minimum position
+    const validRoot = rootPositions.find(root => {
+      const rootPos = root.string * 100 + root.fret;
+      return rootPos >= minRootPosition;
+    });
+    
+    if (validRoot) {
+      selectedRoot = validRoot;
+    } else {
+      // If no valid root found, return empty (this arpeggio can't be played)
+      return [];
+    }
+  }
+  
+  // Now build the arpeggio starting from this root
+  const selectedPositions = [];
+  
+  // Add the root
+  selectedPositions.push({
+    ...selectedRoot,
+    arpeggioNoteIndex: 0,
+    arpeggioNote: arpeggio.rootNote,
+    isArpeggioRoot: true
+  });
+  
+  // Find the remaining arpeggio notes in ascending order from this root
+  const rootPos = selectedRoot.string * 100 + selectedRoot.fret;
+  
+  for (let noteIndex = 1; noteIndex < arpeggio.notes.length; noteIndex++) {
+    const targetNote = arpeggio.notes[noteIndex];
+    
+    // Find all positions of this note in the pattern
+    const notePositions = scalePattern.notes.filter(patternNote => 
+      areNotesEquivalent(patternNote.note, targetNote)
+    );
+    
+    // Find the first occurrence that's after the current root position
+    const validPosition = notePositions
+      .sort((a, b) => {
+        if (a.string !== b.string) return a.string - b.string;
+        return a.fret - b.fret;
+      })
+      .find(pos => {
+        const posValue = pos.string * 100 + pos.fret;
+        return posValue > rootPos;
+      });
+    
+    if (validPosition) {
+      selectedPositions.push({
+        ...validPosition,
+        arpeggioNoteIndex: noteIndex,
+        arpeggioNote: targetNote,
+        isArpeggioRoot: false
+      });
+    }
+  }
+  
+  // Only return if we have all 4 different arpeggio notes
+  return selectedPositions.length === 4 ? selectedPositions : [];
 };
 
 // Check if two notes are equivalent (handles enharmonics)

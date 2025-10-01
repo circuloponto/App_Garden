@@ -59,12 +59,12 @@ const findRootPositions = (root) => {
 };
 
 // Find a scale pattern starting from a specific root position
-const findScalePatternFromRoot = (rootPosition, scaleNotes, root, maxFretSpan = 5) => {
+const findScalePatternFromRoot = (rootPosition, scaleNotes, root, maxFretSpan = 4) => {
   const pattern = [];
   const { string: rootString, fret: rootFret } = rootPosition;
   
-  // Define the fret range for this pattern - start from root, not before it
-  const minFret = Math.max(0, rootFret);
+  // Define the fret range for this pattern - center around the root
+  const minFret = Math.max(0, rootFret - 1);
   const maxFret = Math.min(21, rootFret + maxFretSpan);
   
   // Look for scale notes within the fret range on all strings
@@ -97,43 +97,46 @@ const findScalePatternFromRoot = (rootPosition, scaleNotes, root, maxFretSpan = 
 export const findAllScalePatterns = (scaleNotes, root) => {
   if (!scaleNotes || scaleNotes.length === 0) return [];
   
-  const rootPositions = findRootPositions(root || scaleNotes[0]);
   const patterns = [];
   
-  // Group root positions by fret area to avoid too many similar patterns
-  const fretAreas = {};
+  // Create patterns at specific fret positions to ensure they're different
+  const patternStarts = [0, 3, 5, 7, 9, 12, 15, 17, 19]; // Fixed starting positions
   
-  rootPositions.forEach(rootPos => {
-    const areaKey = Math.floor(rootPos.fret / 3) * 3; // Group by 3-fret areas
-    if (!fretAreas[areaKey]) {
-      fretAreas[areaKey] = [];
-    }
-    fretAreas[areaKey].push(rootPos);
-  });
-  
-  // Create patterns for each fret area, prioritizing lower strings
-  Object.keys(fretAreas).forEach(areaKey => {
-    const areaRoots = fretAreas[areaKey];
+  patternStarts.forEach((startFret, index) => {
+    if (startFret > 21) return; // Don't go beyond fret 21
     
-    // Sort by string (lower strings first) and then by fret
-    areaRoots.sort((a, b) => {
-      if (a.string !== b.string) return a.string - b.string;
-      return a.fret - b.fret;
-    });
+    const pattern = [];
+    const minFret = startFret;
+    const maxFret = Math.min(21, startFret + 4); // 5-fret span
     
-    // Take the first few root positions from this area
-    const selectedRoots = areaRoots.slice(0, 2);
-    
-    selectedRoots.forEach(rootPos => {
-      const pattern = findScalePatternFromRoot(rootPos, scaleNotes, root);
-      if (pattern.notes.length > 0) {
-        patterns.push(pattern);
+    // Find all scale notes in this fret range
+    for (let stringIndex = 0; stringIndex < GUITAR_STRINGS.length; stringIndex++) {
+      for (let fretIndex = minFret; fretIndex <= maxFret; fretIndex++) {
+        const note = GUITAR_STRINGS[stringIndex][fretIndex];
+        
+        if (isNoteInScale(note, scaleNotes)) {
+          const isRoot = areNotesEquivalent(note, root || scaleNotes[0]);
+          
+          pattern.push({
+            string: stringIndex,
+            fret: fretIndex,
+            note: note,
+            isRoot: isRoot
+          });
+        }
       }
-    });
+    }
+    
+    // Only add patterns that have notes
+    if (pattern.length > 0) {
+      patterns.push({
+        rootPosition: null, // No specific root position for these patterns
+        fretRange: { min: minFret, max: maxFret },
+        notes: pattern,
+        name: `Pattern ${index + 1} (Frets ${minFret}-${maxFret})`
+      });
+    }
   });
-  
-  // Sort patterns by fret position
-  patterns.sort((a, b) => a.fretRange.min - b.fretRange.min);
   
   return patterns;
 };

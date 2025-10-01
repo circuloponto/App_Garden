@@ -74,6 +74,21 @@ const FretboardPage = () => {
   const [currentSequenceStep, setCurrentSequenceStep] = useState(-1);
   const [isPlayingArpeggio, setIsPlayingArpeggio] = useState(false);
 
+  // State for string set selection
+  const [selectedStringSet, setSelectedStringSet] = useState('all');
+
+  // State for tracking arpeggio root progression
+  const [minRootPosition, setMinRootPosition] = useState(null);
+
+  // String set options (groups of 3 strings)
+  const stringSetOptions = [
+    { value: 'all', label: 'All Strings', strings: [0, 1, 2, 3, 4, 5] },
+    { value: 'low', label: 'Low Strings (E-A-D)', strings: [0, 1, 2] },
+    { value: 'middle', label: 'Middle Strings (A-D-G)', strings: [1, 2, 3] },
+    { value: 'high', label: 'High Strings (D-G-B)', strings: [2, 3, 4] },
+    { value: 'top', label: 'Top Strings (G-B-E)', strings: [3, 4, 5] }
+  ];
+
   // Initialize scale patterns when component mounts or chord data changes
   useEffect(() => {
     if (firstChord && firstChord.spelling && firstChord.spelling.length > 0) {
@@ -113,6 +128,7 @@ const FretboardPage = () => {
     setCurrentPatternIndex(prev => (prev + 1) % scalePatterns.length);
     setClearAll(false); // Turn off clear all when showing patterns
     setCurrentArpeggioIndex(-1); // Turn off arpeggio when changing patterns
+    setMinRootPosition(null); // Reset root position for new pattern
     setIsPlayingArpeggio(false);
   };
 
@@ -142,6 +158,23 @@ const FretboardPage = () => {
     }
     
     const newIndex = (currentArpeggioIndex + 1) % arpeggios.length;
+    
+    // If cycling back to first arpeggio, reset minimum position
+    if (newIndex === 0) {
+      setMinRootPosition(null);
+    } else {
+      // Update minimum position based on current arpeggio's root position
+      const currentPattern = scalePatterns[currentPatternIndex];
+      if (currentPattern && arpeggios[currentArpeggioIndex]) {
+        const currentArpeggioData = findArpeggioInPattern(arpeggios[currentArpeggioIndex], currentPattern, minRootPosition);
+        if (currentArpeggioData.length > 0) {
+          const rootPosition = currentArpeggioData[0]; // First note is always the root
+          const nextMinPosition = rootPosition.string * 100 + rootPosition.fret + 1;
+          setMinRootPosition(nextMinPosition);
+        }
+      }
+    }
+    
     console.log('Setting arpeggio index to:', newIndex, 'of', arpeggios.length);
     setCurrentArpeggioIndex(newIndex);
     setClearAll(false);
@@ -158,7 +191,7 @@ const FretboardPage = () => {
     if (!currentArpeggio || !currentPattern) return;
     
     // Find arpeggio positions in current pattern
-    const arpeggioPositions = findArpeggioInPattern(currentArpeggio, currentPattern);
+    const arpeggioPositions = findArpeggioInPattern(currentArpeggio, currentPattern, minRootPosition);
     const optimalPositions = getOptimalArpeggioPositions(arpeggioPositions);
     const sequence = createArpeggioSequence(optimalPositions, 600); // 600ms between notes
     
@@ -204,7 +237,7 @@ const FretboardPage = () => {
       console.log('Arpeggio not found at index:', currentArpeggioIndex, 'of', arpeggios.length);
       return null;
     }
-    const arpeggioPositions = findArpeggioInPattern(currentArpeggio, currentPattern);
+    const arpeggioPositions = findArpeggioInPattern(currentArpeggio, currentPattern, minRootPosition);
     const optimalPositions = getOptimalArpeggioPositions(arpeggioPositions);
     
     console.log('Arpeggio data generated:', {
@@ -277,21 +310,52 @@ const FretboardPage = () => {
           >
             {isPlayingArpeggio ? 'Playing...' : 'Play Arpeggio'}
           </button>
+          
+          <select 
+            className={styles.stringSetSelect}
+            value={selectedStringSet}
+            onChange={(e) => setSelectedStringSet(e.target.value)}
+          >
+            {stringSetOptions.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
         
-        {currentPattern && (
-          <div className={styles.patternInfo}>
-            <span>Current Pattern: {currentPattern.name}</span>
-            <span>Frets: {currentPattern.fretRange.min}-{currentPattern.fretRange.max}</span>
+        {/* Scale Display */}
+        {fullScale && fullScale.length > 0 && (
+          <div className={styles.scaleDisplay}>
+            <span className={styles.scaleLabel}>Scale:</span>
+            <div className={styles.scaleNotes}>
+              {fullScale.map((note, index) => {
+                // Check if this note is in the current arpeggio
+                const isInCurrentArpeggio = currentArpeggioIndex >= 0 && 
+                  arpeggios[currentArpeggioIndex] && 
+                  arpeggios[currentArpeggioIndex].notes.includes(note);
+                
+                // Check if this note is the arpeggio root
+                const isArpeggioRoot = currentArpeggioIndex >= 0 && 
+                  arpeggios[currentArpeggioIndex] && 
+                  arpeggios[currentArpeggioIndex].rootNote === note;
+                
+                return (
+                  <span 
+                    key={index} 
+                    className={`${styles.scaleNote} ${
+                      isArpeggioRoot ? styles.arpeggioRootNote : 
+                      isInCurrentArpeggio ? styles.arpeggioNote : ''
+                    }`}
+                  >
+                    {note}
+                  </span>
+                );
+              })}
+            </div>
           </div>
         )}
         
-        {currentArpeggioIndex >= 0 && arpeggios[currentArpeggioIndex] && (
-          <div className={styles.arpeggioInfo}>
-            <span>Current Arpeggio: {arpeggios[currentArpeggioIndex].name}</span>
-            <span>Notes: {arpeggios[currentArpeggioIndex].notes.join(' - ')}</span>
-          </div>
-        )}
       </div>
       
       <div className={styles.fretboardContainer}>
@@ -307,6 +371,7 @@ const FretboardPage = () => {
           allScaleNotes={allScaleNotes}
           clearAll={clearAll}
           arpeggioData={currentArpeggioData}
+          selectedStringSet={stringSetOptions.find(opt => opt.value === selectedStringSet)}
         />
       </div>
     </div>
